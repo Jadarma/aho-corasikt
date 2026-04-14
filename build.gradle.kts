@@ -4,7 +4,13 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kotest)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.ksp)
 }
+
+group = "io.github.jadarma.ahocorasikt"
+version = "0.1.0"
 
 kotlin {
     jvm()
@@ -19,6 +25,16 @@ kotlin {
         apiVersion = KotlinVersion.KOTLIN_2_1
         allWarningsAsErrors = true
         explicitApi()
+    }
+
+    sourceSets {
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotest.runner)
+                implementation(libs.kotest.assertions)
+                implementation(libs.kotest.property)
+            }
+        }
     }
 }
 
@@ -56,6 +72,49 @@ tasks {
     val detekt: Detekt by named<Detekt>("detekt") {
         exclude { true } // Force no source, this is an aggregate task now.
         dependsOn(detektMain, detektTest)
+    }
+}
+//endregion
+
+//region Kotest -------------------------------------------------------------------------------------------------------
+tasks.withType<Test>().configureEach {
+    if (name == "jvmTest") useJUnitPlatform()
+    failOnNoDiscoveredTests = false
+
+    // Don't cache tests, make them run again every time.
+    logger.lifecycle("UP-TO-DATE check for $name is disabled, forcing it to run.")
+    outputs.upToDateWhen { false }
+
+    // Pass along system properties for Kotest.
+    systemProperties = System.getProperties()
+        .asIterable()
+        .filter { it.key.toString().startsWith("kotest.") }
+        .associate { it.key.toString() to it.value }
+
+    systemProperty("kotest.framework.config.fqn", "$group.TestConfig")
+}
+//endregion
+
+//region Kover --------------------------------------------------------------------------------------------------------
+kover {
+    reports {
+        total {
+            html {
+                onCheck = true
+                charset = "UTF-8"
+            }
+            binary {
+                onCheck = true
+            }
+        }
+        filters {
+            includes {
+                classes("$group.*")
+            }
+            excludes {
+                classes($$"*.*$DefaultImpls")
+            }
+        }
     }
 }
 //endregion
