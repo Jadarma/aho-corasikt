@@ -5,6 +5,8 @@ package io.github.jadarma.ahocorasikt
 import io.github.jadarma.ahocorasikt.CaseSensitivity.Sensitive
 import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
 import io.github.jadarma.ahocorasikt.Overlap.Ignored
+import io.github.jadarma.ahocorasikt.Overlap.Leftmost
+import io.github.jadarma.ahocorasikt.internal.TrieBuilder
 
 /**
  * A text search trie for efficient string matching, allowing for matching against an arbitrary number of dictionary
@@ -35,10 +37,12 @@ public interface Trie {
     /**
      * Applies the search algorithm on the given text.
      *
-     * @param text The input character sequence to search.
+     * @param text              The input character sequence to search.
+     * @param requireNoOverlaps If `true` and this tries' [overlap] is [Ignored], forces the use of [Leftmost] instead,
+     *                          in order to ensure no yielded match ranges overlap.
      * @return A lazy iterable of [IntRange]s representing the indices of the [text] where a match was found.
      */
-    public fun search(text: CharSequence): Sequence<IntRange>
+    public fun search(text: CharSequence, requireNoOverlaps: Boolean = false): Sequence<IntRange>
 
     /** A trie builder. */
     public interface Builder {
@@ -50,6 +54,7 @@ public interface Trie {
          *
          * @return The same builder reference.
          *
+         * @throws IllegalArgumentException if the given [word] is empty.
          * @throws IllegalStateException if builder already consumed.
          */
         public fun add(word: CharSequence): Builder
@@ -84,6 +89,6 @@ public interface Trie {
             caseSensitivity: CaseSensitivity = Sensitive,
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Ignored,
-        ): Builder = TODO()
+        ): Builder = TrieBuilder(caseSensitivity, matchType, overlap)
     }
 }
