@@ -25,23 +25,35 @@ internal class UnicodeTrie(
         require(size > 0) { "Trie must contain at least one node." }
     }
 
-    // TODO: Handle match type and overlaps.
+    // TODO: Handle overlaps.
+    @Suppress("CognitiveComplexMethod")
     override fun search(text: CharSequence, requireNoOverlaps: Boolean): Sequence<IntRange> = sequence {
         val source = text.iterator()
         val charMapper = caseSensitivity.asFunction()
+        val boundCheck = matchType.asFunction()
+
         var current = nodes.first()
         var index = 0
+
+        fun testMatch(range: IntRange): Boolean {
+            val before = text.getOrNull(range.first - 1)
+            val after = text.getOrNull(range.last + 1)
+            return (before == null || boundCheck(before)) && (after == null || boundCheck(after))
+        }
+
         while (source.hasNext()) {
             val input = charMapper(source.next())
             current = current.next(input)
             var suffix = current.suffixNode
             while (suffix > 0) {
                 val suffixNode = nodes[suffix]
-                yield(index - suffixNode.depth + 1..index)
+                val range = index - suffixNode.depth + 1..index
+                if(testMatch(range)) yield(range)
                 suffix = suffixNode.suffixNode
             }
             if (current.isMatch) {
-                yield(index - current.depth + 1..index)
+                val range = index - current.depth + 1..index
+                if(testMatch(range)) yield(range)
             }
             index++
         }

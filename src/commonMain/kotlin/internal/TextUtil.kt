@@ -7,6 +7,10 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity.AsciiInsensitive
 import io.github.jadarma.ahocorasikt.CaseSensitivity.SafeInsensitive
 import io.github.jadarma.ahocorasikt.CaseSensitivity.Insensitive
 import io.github.jadarma.ahocorasikt.CaseSensitivity.Sensitive
+import io.github.jadarma.ahocorasikt.MatchType
+import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
+import io.github.jadarma.ahocorasikt.MatchType.WhitespaceSeparated
+import io.github.jadarma.ahocorasikt.MatchType.WholeWords
 
 /** Converts this character using the [AsciiInsensitive] strategy. */
 internal fun Char.toAsciiInsensitive(): Char =
@@ -25,4 +29,11 @@ internal fun CaseSensitivity.asFunction(): (Char) -> Char = when (this) {
     AsciiInsensitive -> Char::toAsciiInsensitive
     SafeInsensitive -> Char::toSaneInsensitive
     Insensitive -> Char::lowercaseChar
+}
+
+/** Provides a character test function for the bounds matching strategy. */
+internal fun MatchType.asFunction(): (Char) -> Boolean = when (this) {
+    Unrestricted -> { _: Char -> true }
+    WhitespaceSeparated -> Char::isWhitespace
+    WholeWords -> { c -> !c.isLetter() }
 }
