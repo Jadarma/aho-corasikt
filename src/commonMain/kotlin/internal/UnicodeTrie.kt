@@ -22,41 +22,52 @@ internal class UnicodeTrie(
     override val size get() = nodes.size
 
     init {
-        require(size > 0) { "Trie must contain at least one node." }
+        require(size > 1) { "Trie must contain at least one non-root node." }
+        require(depth > 0) { "Trie depth must be positive." }
     }
 
-    // TODO: Handle overlaps.
-    @Suppress("CognitiveComplexMethod")
+    @Suppress("CognitiveComplexMethod") // Skill issue.
     override fun search(text: CharSequence, requireNoOverlaps: Boolean): Sequence<IntRange> = sequence {
         val source = text.iterator()
         val charMapper = caseSensitivity.asFunction()
         val boundCheck = matchType.asFunction()
 
+        val overlapper = Overlapper.of(
+            strategy = if(overlap == Overlap.Ignored && requireNoOverlaps) Overlap.Leftmost else overlap,
+            trieDepth = depth,
+        )
+
         var current = nodes.first()
         var index = 0
 
-        fun testMatch(range: IntRange): Boolean {
+        fun testAndOffer(range: IntRange) {
             val before = text.getOrNull(range.first - 1)
             val after = text.getOrNull(range.last + 1)
-            return (before == null || boundCheck(before)) && (after == null || boundCheck(after))
+            val isValidMatch = (before == null || boundCheck(before)) && (after == null || boundCheck(after))
+            if(isValidMatch) overlapper.offer(range)
         }
 
         while (source.hasNext()) {
             val input = charMapper(source.next())
             current = current.next(input)
             var suffix = current.suffixNode
+            if (current.isMatch) {
+                val range = index - current.depth + 1..index
+                testAndOffer(range)
+            }
             while (suffix > 0) {
                 val suffixNode = nodes[suffix]
                 val range = index - suffixNode.depth + 1..index
-                if(testMatch(range)) yield(range)
+                testAndOffer(range)
                 suffix = suffixNode.suffixNode
             }
-            if (current.isMatch) {
-                val range = index - current.depth + 1..index
-                if(testMatch(range)) yield(range)
+            if(index % 256 == 0) {
+                yieldAll(overlapper.check(index))
             }
             index++
         }
+
+        yieldAll(overlapper.checkAndFinalize())
     }
 
     private fun TrieNode.next(input: Char): TrieNode {
