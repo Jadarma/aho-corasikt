@@ -16,6 +16,8 @@ complexity:
 naming:
   BooleanPropertyNaming:
     active: false
+  FunctionNameMaxLength:
+    active: false
 
 potential-bugs:
   UnnamedParameterUse:

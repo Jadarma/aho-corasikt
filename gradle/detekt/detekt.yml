@@ -368,8 +368,10 @@ style:
     active: true
   LoopWithTooManyJumpStatements:
     active: true
+    maxJumpCount: 2
   MagicNumber:
     active: true
+    ignoreLocalVariableDeclaration: true
   MandatoryBracesLoops:
     active: true
   MaxChainedCallsOnSameLine:

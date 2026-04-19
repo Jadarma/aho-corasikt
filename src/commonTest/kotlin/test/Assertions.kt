@@ -32,7 +32,7 @@ private fun Trie.shouldMatchExactlyInternal(
     val expectedMatches = expected.map { (range, slice) ->
         withClue({ "The expected range $range is invalid or does not match text. Bad test declaration?"}) {
             (range as ClosedRange<Int>).shouldBeWithin(text.indices as ClosedRange<Int>)
-            text.slice(range) shouldBe (slice)
+            text.slice(range) shouldBe slice
         }
         range
     }
@@ -53,10 +53,10 @@ private fun Trie.shouldMatchExactlyInternal(
         }
 
         """
-        |Expected but not found:
-        |${formatIndicesList(expected - actual)}
-        |Found but not expected:
-        |${formatIndicesList(actual - expected)}
+            |Expected but not found:
+            |${formatIndicesList(expected - actual)}
+            |Found but not expected:
+            |${formatIndicesList(actual - expected)}
         """.trimMargin()
     }) {
         actualMatches shouldContainExactly expectedMatches
