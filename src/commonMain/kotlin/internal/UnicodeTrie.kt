@@ -6,6 +6,7 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.internal.overlap.Overlapper
 
 /**
  * A trie that can handle the full Unicode range.
@@ -39,6 +40,7 @@ internal class UnicodeTrie(
 
         var current = nodes.first()
         var index = 0
+        val yieldEvery = 256
 
         fun testAndOffer(range: IntRange) {
             val before = text.getOrNull(range.first - 1)
@@ -61,13 +63,13 @@ internal class UnicodeTrie(
                 testAndOffer(range)
                 suffix = suffixNode.suffixNode
             }
-            if(index % 256 == 0) {
+            if(index % yieldEvery == 0) {
                 yieldAll(overlapper.check(index))
             }
             index++
         }
 
-        yieldAll(overlapper.checkAndFinalize())
+        yieldAll(overlapper.finalCheck())
     }
 
     private fun TrieNode.next(input: Char): TrieNode {
