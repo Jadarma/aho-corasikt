@@ -30,9 +30,13 @@ kotlin {
     sourceSets {
         val commonTest by getting {
             dependencies {
-                implementation(libs.kotest.runner)
+                implementation(libs.kotest.engine)
                 implementation(libs.kotest.assertions)
-                implementation(libs.kotest.property)
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(libs.kotest.junit)
             }
         }
     }

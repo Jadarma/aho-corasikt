@@ -2,14 +2,14 @@
 kotlin = "2.3.20"        # https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin/versions
 
 detekt = "2.0.0-alpha.2" # https://central.sonatype.com/artifact/dev.detekt/detekt-gradle-plugin/versions
-kotest = "6.1.10"        # https://central.sonatype.com/artifact/io.kotest/kotest-framework-engine-jvm/versions
+kotest = "6.1.11"        # https://central.sonatype.com/artifact/io.kotest/kotest-framework-engine-jvm/versions
 kover = "0.9.8"          # https://central.sonatype.com/artifact/org.jetbrains.kotlinx.kover/org.jetbrains.kotlinx.kover.gradle.plugin/versions
 ksp = "2.3.6"            # https://central.sonatype.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin/versions
 
 [libraries]
-kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
-kotest-assertions = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
-kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
