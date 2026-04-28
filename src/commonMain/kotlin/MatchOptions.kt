@@ -26,12 +26,12 @@ public enum class CaseSensitivity {
      *
      * Here are some examples and edge-cases:
      * - `Î` _(`\u00CE`)_ can match either itself or `î` _(`\u00EE`)_, because they are converted unambiguously.
+     * - `K` _(`\u212A`)_ will only match against itself, because even though it gets lowercased to a single character
+     *   `k` _(`\u006B`)_, when uppercased back it yield the normal letter `K` _(`\u004B`)_.
      * - `Σ` _(`\u03A3`)_ will match against itself or `σ` _(`\u03C3`)_, but _NOT_ against `ς` _(`\u03C2`)_, because it
      *   depends on relative position inside the word, and the engine cannot account for it.
      * - `İ` _(`\u0130`)_ will only match against itself, because its lowercase variant uses two codepoints:
      *   `i̇` _(`\u0069\u0307`)_.
-     * - `İ` _(`\u0130`)_ will only match against itself, because even though it gets lowercased to a single character
-     *   `i` _(`\u0069`)_, when uppercased back it yield the normal letter `I` _(`\u0049`)_
      * - `ß` _(`\u00DF`)_ will match against itself because it is already lowercase.
      *   It doesn't matter that its uppercase would be two symbols _(`SS`/`\u0053\u0053`)_.
      */
