@@ -1,5 +1,6 @@
 import dev.detekt.gradle.Detekt
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -13,7 +14,21 @@ group = "io.github.jadarma.ahocorasikt"
 version = "0.1.0"
 
 kotlin {
+    // Targets
     jvm()
+
+    // Native
+    linuxX64()
+    linuxArm64()
+    macosArm64()
+    mingwX64()
+    iosArm64()
+    iosSimulatorArm64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    watchosArm64()
+    watchosDeviceArm64()
+    watchosSimulatorArm64()
 
     jvmToolchain {
         languageVersion = JavaLanguageVersion.of(11)
@@ -40,6 +55,20 @@ kotlin {
             }
         }
     }
+
+    /**
+     * On Linux, do not link any shared libraries that aren't needed.
+     * This is especially useful for NixOS.
+     * Also see: https://youtrack.jetbrains.com/projects/KT/issues/KT-55643
+     */
+    targets
+        .filterIsInstance<KotlinNativeTarget>()
+        .filter { it.name.startsWith("linux") }
+        .forEach { target ->
+            target.binaries.all {
+                linkerOpts("-Wl,--as-needed")
+            }
+        }
 }
 
 //region Detekt -------------------------------------------------------------------------------------------------------
