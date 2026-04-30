@@ -95,7 +95,7 @@ tasks.withType<Test>().configureEach {
         .filter { it.key.toString().startsWith("kotest.") }
         .associate { it.key.toString() to it.value }
 
-    systemProperty("kotest.framework.config.fqn", "$group.TestConfig")
+    systemProperty("kotest.framework.config.fqn", "$group.test.TestConfig")
 }
 //endregion
 

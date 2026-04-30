@@ -1,4 +1,4 @@
-package io.github.jadarma.ahocorasikt
+package io.github.jadarma.ahocorasikt.test
 
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.spec.SpecExecutionOrder
