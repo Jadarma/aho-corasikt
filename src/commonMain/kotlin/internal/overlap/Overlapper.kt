@@ -3,7 +3,7 @@
 package io.github.jadarma.ahocorasikt.internal.overlap
 
 import io.github.jadarma.ahocorasikt.Overlap
-import io.github.jadarma.ahocorasikt.Overlap.Ignored
+import io.github.jadarma.ahocorasikt.Overlap.Allowed
 import io.github.jadarma.ahocorasikt.Overlap.Leftmost
 import io.github.jadarma.ahocorasikt.Overlap.Longest
 
@@ -100,7 +100,7 @@ internal sealed class Overlapper {
 
         /** Get a new instance of an [Overlapper] for the given [strategy] and [trieDepth]. */
         fun of(strategy: Overlap, trieDepth: Int): Overlapper = when (strategy) {
-            Ignored -> IgnoredOverlapper()
+            Allowed -> IgnoredOverlapper()
             Leftmost -> LeftmostOverlapper(trieDepth)
             Longest -> LongestOverlapper(trieDepth)
         }

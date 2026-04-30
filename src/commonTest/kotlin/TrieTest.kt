@@ -57,7 +57,7 @@ class TrieTest : FunSpec({
         val trie = Trie.builder().add("hello").add("world").build()
         trie.caseSensitivity shouldBe CaseSensitivity.Sensitive
         trie.matchType shouldBe MatchType.Unrestricted
-        trie.overlap shouldBe Overlap.Ignored
+        trie.overlap shouldBe Overlap.Allowed
     }
 
     test("Respects user overrides for match settings") {
@@ -79,6 +79,6 @@ class TrieTest : FunSpec({
         trie.size shouldBe 11
         trie.caseSensitivity shouldBe CaseSensitivity.Sensitive
         trie.matchType shouldBe MatchType.Unrestricted
-        trie.overlap shouldBe Overlap.Ignored
+        trie.overlap shouldBe Overlap.Allowed
     }
 })

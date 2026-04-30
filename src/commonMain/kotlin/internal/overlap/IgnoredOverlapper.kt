@@ -5,7 +5,7 @@ package io.github.jadarma.ahocorasikt.internal.overlap
 import io.github.jadarma.ahocorasikt.Overlap
 
 /**
- * Implements [Overlap.Ignored] strategy; effectively a NOOP handler.
+ * Implements [Overlap.Allowed] strategy; effectively a NOOP handler.
  * All candidates are valid.
  */
 internal class IgnoredOverlapper : Overlapper() {

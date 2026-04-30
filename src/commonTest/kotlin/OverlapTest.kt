@@ -45,13 +45,13 @@ class OverlapTest : FunSpec({
         49..54 to "hinery", // Takes over `chin` because it is longer.
     )
 
-    context(Overlap.Ignored.name) {
-        val ignored = Trie.of(words, overlap = Overlap.Ignored)
+    context(Overlap.Allowed.name) {
+        val allowed = Trie.of(words, overlap = Overlap.Allowed)
         test("Emits all matches ignoring overlaps") {
-            ignored.shouldMatchExactly(text, withOverlaps)
+            allowed.shouldMatchExactly(text, withOverlaps)
         }
         test("Falls back to leftmost when required no overlaps.") {
-            ignored.shouldMatchExactlyIgnoringOverlaps(text, withLeftmost)
+            allowed.shouldMatchExactlyIgnoringOverlaps(text, withLeftmost)
         }
     }
 

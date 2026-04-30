@@ -34,7 +34,7 @@ internal class UnicodeTrie(
         val boundCheck = matchType.asFunction()
 
         val overlapper = Overlapper.of(
-            strategy = if(overlap == Overlap.Ignored && requireNoOverlaps) Overlap.Leftmost else overlap,
+            strategy = if(overlap == Overlap.Allowed && requireNoOverlaps) Overlap.Leftmost else overlap,
             trieDepth = depth,
         )
 

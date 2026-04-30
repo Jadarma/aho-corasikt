@@ -64,7 +64,7 @@ public enum class MatchType {
 public enum class Overlap {
 
     /** All keyword matches are emitted, regardless of overlap. */
-    Ignored,
+    Allowed,
 
     /** If two matches overlap, the one with the lower starting index wins. */
     Leftmost,
