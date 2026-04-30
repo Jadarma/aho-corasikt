@@ -38,6 +38,8 @@ internal class TrieBuilder internal constructor(
     }
 
     override fun build(): Trie {
+        check(!built) { "TrieBuilder already consumed." }
+
         val queue = ArrayDeque<TrieBuilderNode>()
         val trieNodes = arrayOfNulls<TrieNode>(size)
         var counter = 0
@@ -63,6 +65,7 @@ internal class TrieBuilder internal constructor(
         }
 
         check(inserted == counter && counter == size - 1) { "Did not traverse all trie nodes." }
+        built = true
 
         @Suppress("UNCHECKED_CAST")
         return UnicodeTrie(

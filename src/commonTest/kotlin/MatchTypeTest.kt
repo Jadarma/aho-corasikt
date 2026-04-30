@@ -1,7 +1,5 @@
-package io.github.jadarma.ahocorasikt.examples
+package io.github.jadarma.ahocorasikt
 
-import io.github.jadarma.ahocorasikt.MatchType
-import io.github.jadarma.ahocorasikt.Trie
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactly
 import io.kotest.core.spec.style.FunSpec
 
@@ -11,7 +9,7 @@ class MatchTypeTest : FunSpec({
     val words = setOf("The", "the", "quick", "brown", "oxy", "jump", "over", "lazy", "dog")
 
     context(MatchType.Unrestricted.name) {
-        val ignored = Trie.builder(matchType = MatchType.Unrestricted).addAll(words).build()
+        val ignored = Trie.of(words, matchType = MatchType.Unrestricted)
         val expected = listOf(
             0..2 to "The",
             4..8 to "quick",
@@ -30,7 +28,7 @@ class MatchTypeTest : FunSpec({
     }
 
     context(MatchType.WhitespaceSeparated.name) {
-        val ignored = Trie.builder(matchType = MatchType.WhitespaceSeparated).addAll(words).build()
+        val ignored = Trie.of(words, matchType = MatchType.WhitespaceSeparated)
         val expected = listOf(
             0..2 to "The",
             27..30 to "over",
@@ -43,7 +41,7 @@ class MatchTypeTest : FunSpec({
     }
 
     context(MatchType.WholeWords.name) {
-        val ignored = Trie.builder(matchType = MatchType.WholeWords).addAll(words).build()
+        val ignored = Trie.of(words, matchType = MatchType.WholeWords)
         val expected = listOf(
             0..2 to "The",
             4..8 to "quick",

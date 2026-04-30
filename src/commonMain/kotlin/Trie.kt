@@ -59,11 +59,16 @@ public interface Trie {
          */
         public fun add(word: CharSequence): Builder
 
-        /** Calls the [add] function for all [words]. */
+        /**
+         * Calls the [add] function for all [words].
+         * If the function failed for a word, stops processing the rest and propagates the exception.
+         *
+         * @return The same builder reference.
+         *
+         * @throws IllegalArgumentException if any given word is empty.
+         * @throws IllegalStateException If builder was already consumed.
+         */
         public fun addAll(words: Iterable<CharSequence>): Builder = apply { words.forEach(::add) }
-
-        /** Calls the [add] function for all [words]. */
-        public fun addAll(vararg words: CharSequence): Builder = addAll(words.asIterable())
 
         /**
          * Finalize building the trie.
@@ -90,5 +95,24 @@ public interface Trie {
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Ignored,
         ): Builder = TrieBuilder(caseSensitivity, matchType, overlap)
+
+        /**
+         * Create a new trie using the given settings.
+         * Use when all the keywords are already available, to skip builder boilerplate.
+         *
+         * @param keywords        The patterns this trie will match.
+         * @param caseSensitivity How case sensitivity is handled in input strings.
+         *                        By default, every match is case-sensitive.
+         * @param matchType       In what context should matches be emitted.
+         *                        By default, any match is valid.
+         * @param overlap         How the trie should handle matches whose ranges overlap.
+         *                        By default, all matches are emitted.
+         */
+        public fun of(
+            keywords: Iterable<CharSequence>,
+            caseSensitivity: CaseSensitivity = Sensitive,
+            matchType: MatchType = Unrestricted,
+            overlap: Overlap = Ignored,
+        ): Trie = builder(caseSensitivity, matchType, overlap).addAll(keywords).build()
     }
 }
