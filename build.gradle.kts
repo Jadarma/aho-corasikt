@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotest)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.benchmark)
 }
 
 group = "io.github.jadarma.ahocorasikt"
@@ -30,6 +31,9 @@ kotlin {
     watchosDeviceArm64()
     watchosSimulatorArm64()
 
+    applyDefaultHierarchyTemplate()
+
+    // Compilation Options
     jvmToolchain {
         languageVersion = JavaLanguageVersion.of(11)
         vendor = JvmVendorSpec.ADOPTIUM
@@ -42,6 +46,7 @@ kotlin {
         explicitApi()
     }
 
+    // Dependencies
     sourceSets {
         val commonTest by getting {
             dependencies {
@@ -86,7 +91,7 @@ tasks {
             checkstyle.required = false
         }
         // See https://github.com/detekt/detekt/issues/5611
-        exclude { it.file.invariantSeparatorsPath.contains("build/generated/")}
+        exclude { it.file.invariantSeparatorsPath.contains("build/generated/") }
     }
 
     val detektMain: Detekt by named<Detekt>("detektCommonMainSourceSet") {
@@ -148,6 +153,45 @@ kover {
                 classes($$"*.*$DefaultImpls")
             }
         }
+    }
+}
+//endregion
+
+//region Benchmark ----------------------------------------------------------------------------------------------------
+kotlin {
+    val benchmarkTargets = setOf("jvm", "macosArm64", "linuxX64")
+
+    sourceSets {
+        val commonBenchmark by creating {
+            dependencies {
+                implementation(libs.kotlinx.benchmark.runtime)
+            }
+        }
+
+        targets.matching { it.name in benchmarkTargets }.configureEach {
+            compilations {
+                val main by getting
+                val benchmark by creating {
+                    associateWith(main)
+                    defaultSourceSet.dependsOn(commonBenchmark)
+                }
+            }
+        }
+    }
+}
+
+benchmark {
+    configurations.getByName("main") {
+        reportFormat = "text"
+        warmups = 3
+        iterations = 5
+        iterationTime = 2
+        iterationTimeUnit = "s"
+    }
+    targets {
+        register("jvmBenchmark")
+        register("macosArm64Benchmark")
+        register("linuxX64Benchmark")
     }
 }
 //endregion
