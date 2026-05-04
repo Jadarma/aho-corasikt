@@ -6,7 +6,7 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity.Sensitive
 import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
 import io.github.jadarma.ahocorasikt.Overlap.Allowed
 import io.github.jadarma.ahocorasikt.Overlap.Leftmost
-import io.github.jadarma.ahocorasikt.internal.TrieBuilder
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilder
 
 /**
  * A text search trie for efficient string matching, allowing for matching against an arbitrary number of dictionary

@@ -1,6 +1,9 @@
 // Copyright © 2026 Dan Cîmpianu
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
-package io.github.jadarma.ahocorasikt.internal
+package io.github.jadarma.ahocorasikt.internal.builder
+
+import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode
+import io.github.jadarma.ahocorasikt.internal.nodes.TrieHashNode
 
 /** A node of a Trie that is still in its building phase. */
 internal class TrieBuilderNode(
@@ -34,12 +37,12 @@ internal class TrieBuilderNode(
     }
 
     /** Construct the proper final node. */
-    fun build(): TrieNode = TrieNodeImpl(
+    fun build(): TrieHashNode = TrieHashNode(
         index = index,
         depthAndMatch = depth * if (isMatch) 1 else -1,
         suffixNode = suffixNode?.index ?: -1,
         failNode = failNode.index,
-        children = children.mapValues { (_, v) -> v.index },
+        children = children.entries.associate { (k, v) -> k.code to v.index },
     )
 
     /** Calculate the next node that should be visited if receiving [input]. */

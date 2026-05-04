@@ -1,11 +1,15 @@
 // Copyright © 2026 Dan Cîmpianu
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
-package io.github.jadarma.ahocorasikt.internal
+package io.github.jadarma.ahocorasikt.internal.builder
 
 import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.internal.TrieImpl
+import io.github.jadarma.ahocorasikt.internal.asFunction
+import io.github.jadarma.ahocorasikt.internal.nodes.HashMapNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.TrieHashNode
 
 internal class TrieBuilder internal constructor(
     private val caseSensitivity: CaseSensitivity,
@@ -15,7 +19,6 @@ internal class TrieBuilder internal constructor(
 
     private val root = TrieBuilderNode(null, 0.toChar())
     private var size = 1
-    private var depth = 0
     private var built = false
 
     private var caseMapping = caseSensitivity.asFunction()
@@ -33,15 +36,15 @@ internal class TrieBuilder internal constructor(
             }
             .apply { isMatch = true }
 
-        depth = maxOf(depth, word.length)
         return this
     }
 
     override fun build(): Trie {
         check(!built) { "TrieBuilder already consumed." }
+        built = true
 
         val queue = ArrayDeque<TrieBuilderNode>()
-        val trieNodes = arrayOfNulls<TrieNode>(size)
+        val trieNodes = arrayOfNulls<TrieHashNode>(size)
         var counter = 0
         var inserted = 0
 
@@ -65,15 +68,10 @@ internal class TrieBuilder internal constructor(
         }
 
         check(inserted == counter && counter == size - 1) { "Did not traverse all trie nodes." }
-        built = true
 
         @Suppress("UNCHECKED_CAST")
-        return UnicodeTrie(
-            overlap = overlap,
-            matchType = matchType,
-            caseSensitivity = caseSensitivity,
-            depth = depth,
-            nodes = trieNodes as Array<TrieNode>,
-        )
+        val nodes = HashMapNodes(trieNodes as Array<TrieHashNode>)
+
+        return TrieImpl(overlap, matchType, caseSensitivity, nodes)
     }
 }

@@ -6,21 +6,18 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.overlap.Overlapper
 
-/**
- * A trie that can handle the full Unicode range.
- * It is stored as a flat array of nodes, with their child connections encoded as simple hashmaps.
- */
-internal class UnicodeTrie(
+internal class TrieImpl(
     override val overlap: Overlap,
     override val matchType: MatchType,
     override val caseSensitivity: CaseSensitivity,
-    override val depth: Int,
-    private val nodes: Array<TrieNode>,
+    private val nodes: TrieNodes,
 ) : Trie {
 
     override val size get() = nodes.size
+    override val depth get() = nodes.depth
 
     init {
         require(size > 1) { "Trie must contain at least one non-root node." }
@@ -38,7 +35,7 @@ internal class UnicodeTrie(
             trieDepth = depth,
         )
 
-        var current = nodes.first()
+        var current = 0
         var index = 0
         val yieldEvery = 256
 
@@ -50,18 +47,17 @@ internal class UnicodeTrie(
         }
 
         while (source.hasNext()) {
-            val input = charMapper(source.next())
-            current = current.next(input)
-            var suffix = current.suffixNode
-            if (current.isMatch) {
-                val range = index - current.depth + 1..index
+            val input = charMapper(source.next()).code
+            current = nodes.next(current, input)
+            if (nodes.isMatch(current)) {
+                val range = index - nodes.depthOf(current) + 1..index
                 testAndOffer(range)
             }
+            var suffix = nodes.suffixOf(current)
             while (suffix > 0) {
-                val suffixNode = nodes[suffix]
-                val range = index - suffixNode.depth + 1..index
+                val range = index - nodes.depthOf(suffix) + 1..index
                 testAndOffer(range)
-                suffix = suffixNode.suffixNode
+                suffix = nodes.suffixOf(suffix)
             }
             if(index % yieldEvery == 0) {
                 yieldAll(overlapper.check(index))
@@ -70,13 +66,5 @@ internal class UnicodeTrie(
         }
 
         yieldAll(overlapper.finalCheck())
-    }
-
-    private fun TrieNode.next(input: Char): TrieNode {
-        var dest: TrieNode = this
-        while (dest.index != 0 && !dest.children.containsKey(input)) {
-            dest = nodes[dest.failNode]
-        }
-        return nodes[dest.children[input] ?: dest.failNode]
     }
 }
