@@ -1,5 +1,6 @@
 package io.github.jadarma.ahocorasikt
 
+import io.github.jadarma.ahocorasikt.test.ofVariants
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactly
 import io.kotest.core.spec.style.FunSpec
 
@@ -26,7 +27,7 @@ class CaseSensitivityTest : FunSpec({
     )
 
     context(CaseSensitivity.Sensitive.name) {
-        val trie = Trie.of(words, caseSensitivity = CaseSensitivity.Sensitive)
+        val trie = Trie.ofVariants(words, caseSensitivity = CaseSensitivity.Sensitive)
 
         test("Finds keywords exactly as given") {
 
@@ -44,7 +45,7 @@ class CaseSensitivityTest : FunSpec({
     }
 
     context(CaseSensitivity.AsciiInsensitive.name) {
-        val trie = Trie.of(words, caseSensitivity = CaseSensitivity.AsciiInsensitive)
+        val trie = Trie.ofVariants(words, caseSensitivity = CaseSensitivity.AsciiInsensitive)
 
         test("Finds all casing variations of ASCII letters") {
             val expected = listOf(
@@ -66,7 +67,7 @@ class CaseSensitivityTest : FunSpec({
     }
 
     context(CaseSensitivity.SafeInsensitive.name) {
-        val trie = Trie.of(words, caseSensitivity = CaseSensitivity.SafeInsensitive)
+        val trie = Trie.ofVariants(words, caseSensitivity = CaseSensitivity.SafeInsensitive)
 
         test("Handles all safe unicode case mappings") {
             val expected = listOf(
@@ -89,7 +90,7 @@ class CaseSensitivityTest : FunSpec({
     }
 
     context(CaseSensitivity.Insensitive.name) {
-        val trie = Trie.of(words, caseSensitivity = CaseSensitivity.Insensitive)
+        val trie = Trie.ofVariants(words, caseSensitivity = CaseSensitivity.Insensitive)
 
         test("Is the most relaxed matcher.") {
             val expected = listOf(

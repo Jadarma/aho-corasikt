@@ -2,6 +2,9 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.nodes
 
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
+import kotlin.collections.component1
+import kotlin.collections.component2
 import kotlin.jvm.JvmInline
 import kotlin.math.absoluteValue
 
@@ -41,4 +44,14 @@ internal class TrieHashNode(
 ) {
     val depth: Int get() = depthAndMatch.absoluteValue
     val isMatch: Boolean get() = depthAndMatch > 0
+
+    companion object {
+        fun from(node: TrieBuilderNode): TrieHashNode = TrieHashNode(
+            index = node.index,
+            depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
+            suffixNode = node.suffixNode?.index ?: -1,
+            failNode = node.failNode.index,
+            children = node.children.entries.associate { (k, v) -> k to v.index },
+        )
+    }
 }

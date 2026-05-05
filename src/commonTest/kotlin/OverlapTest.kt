@@ -1,5 +1,6 @@
 package io.github.jadarma.ahocorasikt
 
+import io.github.jadarma.ahocorasikt.test.ofVariants
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactly
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactlyIgnoringOverlaps
 import io.kotest.core.spec.style.FunSpec
@@ -46,7 +47,7 @@ class OverlapTest : FunSpec({
     )
 
     context(Overlap.Allowed.name) {
-        val allowed = Trie.of(words, overlap = Overlap.Allowed)
+        val allowed = Trie.ofVariants(words, overlap = Overlap.Allowed)
         test("Emits all matches ignoring overlaps") {
             allowed.shouldMatchExactly(text, withOverlaps)
         }
@@ -56,7 +57,7 @@ class OverlapTest : FunSpec({
     }
 
     context(Overlap.Leftmost.name) {
-        val ignored = Trie.of(words, overlap = Overlap.Leftmost)
+        val ignored = Trie.ofVariants(words, overlap = Overlap.Leftmost)
         test("Prefers earlier matches, then longer matches.") {
             ignored.shouldMatchExactly(text, withLeftmost)
         }
@@ -66,7 +67,7 @@ class OverlapTest : FunSpec({
     }
 
     context(Overlap.Longest.name) {
-        val ignored = Trie.of(words, overlap = Overlap.Longest)
+        val ignored = Trie.ofVariants(words, overlap = Overlap.Longest)
         test("Prefers longer matches.") {
             ignored.shouldMatchExactly(text, withLongest)
         }

@@ -1,15 +1,16 @@
 package io.github.jadarma.ahocorasikt
 
+import io.github.jadarma.ahocorasikt.test.ofVariants
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactly
 import io.kotest.core.spec.style.FunSpec
 
 class MatchTypeTest : FunSpec({
 
-    val text = "The quick-brown foxy jumps over the lazy!dog"
-    val words = setOf("The", "the", "quick", "brown", "oxy", "jump", "over", "lazy", "dog")
+    val text = "The quick-brown foxy jumps over the lazy!dog_@"
+    val words = setOf("The", "the", "quick", "brown", "oxy", "jump", "over", "lazy", "dog", "@")
 
     context(MatchType.Unrestricted.name) {
-        val ignored = Trie.of(words, matchType = MatchType.Unrestricted)
+        val ignored = Trie.ofVariants(words, matchType = MatchType.Unrestricted)
         val expected = listOf(
             0..2 to "The",
             4..8 to "quick",
@@ -20,6 +21,7 @@ class MatchTypeTest : FunSpec({
             32..34 to "the",
             36..39 to "lazy",
             41..43 to "dog",
+            45..45 to "@",
         )
 
         test("Emits all matches regardless of surroundings") {
@@ -28,7 +30,7 @@ class MatchTypeTest : FunSpec({
     }
 
     context(MatchType.WhitespaceSeparated.name) {
-        val ignored = Trie.of(words, matchType = MatchType.WhitespaceSeparated)
+        val ignored = Trie.ofVariants(words, matchType = MatchType.WhitespaceSeparated)
         val expected = listOf(
             0..2 to "The",
             27..30 to "over",
@@ -41,7 +43,7 @@ class MatchTypeTest : FunSpec({
     }
 
     context(MatchType.WholeWords.name) {
-        val ignored = Trie.of(words, matchType = MatchType.WholeWords)
+        val ignored = Trie.ofVariants(words, matchType = MatchType.WholeWords)
         val expected = listOf(
             0..2 to "The",
             4..8 to "quick",
@@ -50,6 +52,7 @@ class MatchTypeTest : FunSpec({
             32..34 to "the",
             36..39 to "lazy",
             41..43 to "dog",
+            45..45 to "@",
         )
 
         test("Emits only matches that are between non-letters.") {

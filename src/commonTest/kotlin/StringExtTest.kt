@@ -1,5 +1,6 @@
 package io.github.jadarma.ahocorasikt
 
+import io.github.jadarma.ahocorasikt.test.ofVariants
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -23,7 +24,7 @@ class StringExtTest : FunSpec({
     val unmatching = "🚫"
 
     val words = setOf("ore", "et", "ipsum", "amet", "magna")
-    val trie = Trie.of(words)
+    val trie = Trie.ofVariants(words)
 
     context("String matching") {
         test("using matches function") {
