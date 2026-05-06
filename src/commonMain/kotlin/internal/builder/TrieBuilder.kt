@@ -8,11 +8,11 @@ import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
 import io.github.jadarma.ahocorasikt.internal.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.asFunction
-import io.github.jadarma.ahocorasikt.internal.nodes.CompactedNodes
-import io.github.jadarma.ahocorasikt.internal.nodes.TrieCompactNode
-import io.github.jadarma.ahocorasikt.internal.nodes.HashMapNodes
-import io.github.jadarma.ahocorasikt.internal.nodes.TrieCompactNode.Companion.MAX_COMPACT_SIZE
-import io.github.jadarma.ahocorasikt.internal.nodes.TrieHashNode
+import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
+import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNode
+import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 
 internal class TrieBuilder internal constructor(
     private val caseSensitivity: CaseSensitivity,
@@ -54,75 +54,46 @@ internal class TrieBuilder internal constructor(
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
 
+        // Build the Trie connections in the sparse representation.
+        val queue = ArrayDeque<TrieBuilderNode>()
+        val nodes = arrayOfNulls<DefaultTrieNode>(size)
+        var counter = 0
+        var inserted = 0
+
+        nodes[0] = root.run {
+            index = 0
+            failNode = root
+            children.entries.sortedBy { it.key }.forEach { (_, child) ->
+                child.index = ++counter
+                child.failNode = this
+                queue.addLast(child)
+            }
+            build()
+        }
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for ((_, child) in node.children.entries.sortedBy { it.key }) {
+                child.index = ++counter
+                child.compute()
+                queue.addLast(child)
+            }
+            nodes[++inserted] = node.build()
+        }
+
+        check(counter == size - 1) { "Did not traverse all trie nodes." }
+        @Suppress("UNCHECKED_CAST")
+        nodes as Array<DefaultTrieNode>
+
+        // Check for optimizations and build the appropriate variant.
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
-        if(canCompact && optimizationLevel >= 1) return buildCompact()
 
-        return buildNormal()
-    }
-
-    private fun buildNormal(): Trie {
-        val queue = ArrayDeque<TrieBuilderNode>()
-        val trieNodes = arrayOfNulls<TrieHashNode>(size)
-        var counter = 0
-        var inserted = 0
-
-        root.index = 0
-        root.failNode = root
-        root.children.entries.sortedBy { it.key }.forEach { (_, child) ->
-            child.index = ++counter
-            child.failNode = root
-            queue.addLast(child)
-        }
-        trieNodes[0] = TrieHashNode.from(root)
-
-        while (queue.isNotEmpty()) {
-            val node = queue.removeFirst()
-            for ((_, child) in node.children.entries.sortedBy { it.key }) {
-                child.index = ++counter
-                child.compute()
-                queue.addLast(child)
-            }
-            trieNodes[++inserted] = TrieHashNode.from(node)
+        val trieNodes: TrieNodes = if(canCompact && optimizationLevel >= 1) {
+            CompactTrieNodes.from(nodes)
+        } else {
+            DefaultTrieNodes(nodes)
         }
 
-        check(inserted == counter && counter == size - 1) { "Did not traverse all trie nodes." }
-
-        @Suppress("UNCHECKED_CAST")
-        val nodes = HashMapNodes(trieNodes as Array<TrieHashNode>)
-
-        return TrieImpl(overlap, matchType, caseSensitivity, nodes)
-    }
-
-    private fun buildCompact(): Trie {
-        val queue = ArrayDeque<TrieBuilderNode>()
-        val trieNodes = arrayOfNulls<TrieCompactNode>(size)
-        var counter = 0
-        var inserted = 0
-
-        root.index = 0
-        root.failNode = root
-        root.children.entries.sortedBy { it.key }.forEach { (_, child) ->
-            child.index = ++counter
-            child.failNode = root
-            queue.addLast(child)
-        }
-        trieNodes[0] = TrieCompactNode.from(root)
-
-        while (queue.isNotEmpty()) {
-            val node = queue.removeFirst()
-            for ((_, child) in node.children.entries.sortedBy { it.key }) {
-                child.index = ++counter
-                child.compute()
-                queue.addLast(child)
-            }
-            trieNodes[++inserted] = TrieCompactNode.from(node)
-        }
-
-        check(inserted == counter && counter == size - 1) { "Did not traverse all trie nodes." }
-
-        @Suppress("UNCHECKED_CAST")
-        val nodes = CompactedNodes(trieNodes as Array<TrieCompactNode>)
-
-        return TrieImpl(overlap, matchType, caseSensitivity, nodes)
+        return TrieImpl(overlap, matchType, caseSensitivity, trieNodes)
     }
 }

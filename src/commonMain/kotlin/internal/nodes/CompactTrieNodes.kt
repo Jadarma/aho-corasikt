@@ -2,7 +2,6 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.nodes
 
-import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import kotlin.math.absoluteValue
@@ -11,15 +10,15 @@ import kotlin.math.absoluteValue
  * Stores nodes in a breadth-first-ordered array.
  * The children of nodes are not stored directly, rather each node remembers the index of the first child node, and
  * has a bitset, where the _n_-th bit is set if a connection exists to a child node via _n_.
- * The actual index of the child is calculated by counting how many bits are set to left of n, and adding that to the
- * index of the first child.
+ * The actual index of the child is calculated by adding the pop-count of bits left of n, and adding that to the index
+ * of the first child.
  *
  * This optimization improves performance as there are no hashmap calculations to maintain, and the node itself is
  * contiguous in memory, reducing memory lookup.
  * However, it may only be used when all inputs are in `0..255` range.
  */
 @JvmInline
-internal value class CompactedNodes(val nodes: Array<TrieCompactNode>) : TrieNodes {
+internal value class CompactTrieNodes private constructor(val nodes: Array<CompactTrieNode>) : TrieNodes {
 
     override val size: Int get() = nodes.size
 
@@ -32,16 +31,24 @@ internal value class CompactedNodes(val nodes: Array<TrieCompactNode>) : TrieNod
     override fun suffixOf(index: Int): Int = nodes[index].suffixNode
 
     override fun next(index: Int, input: Int): Int {
-        var dest: TrieCompactNode = nodes[index]
+        var dest: CompactTrieNode = nodes[index]
         while (dest.depthAndMatch != 0 && input !in dest) {
             dest = nodes[dest.failNode]
         }
         return dest.next(input)
     }
+
+    companion object {
+
+        fun from(nodes: Array<DefaultTrieNode>): CompactTrieNodes {
+            val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it]) }
+            return CompactTrieNodes(compacted)
+        }
+    }
 }
 
 @Suppress("MagicNumber")
-internal class TrieCompactNode(
+internal class CompactTrieNode(
     val depthAndMatch: Int,
     val suffixNode: Int,
     val failNode: Int,
@@ -90,12 +97,14 @@ internal class TrieCompactNode(
     companion object {
 
         /**
-         * The maximum number of children a [TrieCompactNode] can have.
+         * The maximum number of children a [CompactTrieNode] can have.
          * Values of all child connections (input value transitions) must also be lower than this value.
          */
         const val MAX_COMPACT_SIZE = 256
 
-        fun from(node: TrieBuilderNode): TrieCompactNode {
+        fun from(node: DefaultTrieNode): CompactTrieNode {
+            require(node.children.size <= MAX_COMPACT_SIZE) { "Cannot compact node. It has too many children." }
+
             val children = LongArray(4).apply {
                 for (input in node.children.keys.sorted()) {
                     val bucket = input.ushr(6)
@@ -103,11 +112,12 @@ internal class TrieCompactNode(
                     this[bucket] = this[bucket].setBit(bucketOffset)
                 }
             }
-            return TrieCompactNode(
+
+            return CompactTrieNode(
                 depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
-                suffixNode = node.suffixNode?.index ?: -1,
-                failNode = node.failNode.index,
-                childOffset = node.children.minByOrNull { it.key }?.value?.index ?: -1,
+                suffixNode = node.suffixNode,
+                failNode = node.failNode,
+                childOffset = node.children.minByOrNull { it.key }?.value ?: -1,
                 children0 = children[0],
                 children1 = children[1],
                 children2 = children[2],
