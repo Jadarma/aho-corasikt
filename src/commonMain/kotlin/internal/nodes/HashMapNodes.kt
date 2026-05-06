@@ -28,7 +28,7 @@ internal value class HashMapNodes(val nodes: Array<TrieHashNode>) : TrieNodes {
 
     override fun next(index: Int, input: Int): Int {
         var dest: TrieHashNode = nodes[index]
-        while (dest.index != 0 && !dest.children.containsKey(input)) {
+        while (dest.depthAndMatch != 0 && !dest.children.containsKey(input)) {
             dest = nodes[dest.failNode]
         }
         return dest.children[input] ?: dest.failNode
@@ -36,7 +36,6 @@ internal value class HashMapNodes(val nodes: Array<TrieHashNode>) : TrieNodes {
 }
 
 internal class TrieHashNode(
-    val index: Int,
     val depthAndMatch: Int,
     val suffixNode: Int,
     val failNode: Int,
@@ -47,7 +46,6 @@ internal class TrieHashNode(
 
     companion object {
         fun from(node: TrieBuilderNode): TrieHashNode = TrieHashNode(
-            index = node.index,
             depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
             suffixNode = node.suffixNode?.index ?: -1,
             failNode = node.failNode.index,

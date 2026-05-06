@@ -33,7 +33,7 @@ internal value class CompactedNodes(val nodes: Array<TrieCompactNode>) : TrieNod
 
     override fun next(index: Int, input: Int): Int {
         var dest: TrieCompactNode = nodes[index]
-        while (dest.index != 0 && input !in dest) {
+        while (dest.depthAndMatch != 0 && input !in dest) {
             dest = nodes[dest.failNode]
         }
         return dest.next(input)
@@ -42,7 +42,6 @@ internal value class CompactedNodes(val nodes: Array<TrieCompactNode>) : TrieNod
 
 @Suppress("MagicNumber")
 internal class TrieCompactNode(
-    val index: Int,
     val depthAndMatch: Int,
     val suffixNode: Int,
     val failNode: Int,
@@ -105,7 +104,6 @@ internal class TrieCompactNode(
                 }
             }
             return TrieCompactNode(
-                index = node.index,
                 depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
                 suffixNode = node.suffixNode?.index ?: -1,
                 failNode = node.failNode.index,
