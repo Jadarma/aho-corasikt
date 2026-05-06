@@ -55,7 +55,7 @@ public interface Trie {
          * @return The same builder reference.
          *
          * @throws IllegalArgumentException if the given [word] is empty.
-         * @throws IllegalStateException if builder already consumed.
+         * @throws IllegalStateException    if builder already consumed.
          */
         public fun add(word: CharSequence): Builder
 
@@ -66,14 +66,15 @@ public interface Trie {
          * @return The same builder reference.
          *
          * @throws IllegalArgumentException if any given word is empty.
-         * @throws IllegalStateException If builder was already consumed.
+         * @throws IllegalStateException    if builder was already consumed.
          */
         public fun addAll(words: Iterable<CharSequence>): Builder = apply { words.forEach(::add) }
 
         /**
          * Finalize building the trie.
          *
-         * @throws IllegalStateException If builder was already consumed.
+         * @throws IllegalArgumentException if no words were added.
+         * @throws IllegalStateException    if builder was already consumed.
          */
         public fun build(): Trie
     }

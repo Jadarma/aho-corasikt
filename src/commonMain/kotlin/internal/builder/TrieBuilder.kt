@@ -23,12 +23,12 @@ internal class TrieBuilder internal constructor(
     private var built = false
 
     /** Internal flag used only for testing. All production Tries are optimized. */
-    internal var disableOptimization = false
-
-    private var canOptimize = true
+    internal var optimizationLevel: Int = Int.MAX_VALUE
 
     private val root = TrieBuilderNode(null, -1)
     private var size = 1
+
+    private val alphabet = mutableSetOf<Int>()
 
     private var caseMapping = caseSensitivity.asFunction()
 
@@ -38,7 +38,7 @@ internal class TrieBuilder internal constructor(
         word
             .fold(root) { node, char ->
                 val c = caseMapping(char).code
-                if(c >= MAX_COMPACT_SIZE) canOptimize = false
+                alphabet.add(c)
                 node.children.getOrPut(c) {
                     size++
                     TrieBuilderNode(parent = node, via = c)
@@ -51,8 +51,13 @@ internal class TrieBuilder internal constructor(
 
     override fun build(): Trie {
         check(!built) { "TrieBuilder already consumed." }
+        require(size > 1) { "No keywords added, nothing to build." }
         built = true
-        return if (!disableOptimization && canOptimize) buildCompact() else buildNormal()
+
+        val canCompact = alphabet.size <= MAX_COMPACT_SIZE
+        if(canCompact && optimizationLevel >= 1) return buildCompact()
+
+        return buildNormal()
     }
 
     private fun buildNormal(): Trie {
