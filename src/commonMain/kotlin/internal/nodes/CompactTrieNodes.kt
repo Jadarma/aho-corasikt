@@ -18,7 +18,7 @@ import kotlin.math.absoluteValue
  * However, it may only be used when all inputs are in `0..255` range.
  */
 @JvmInline
-internal value class CompactTrieNodes private constructor(val nodes: Array<CompactTrieNode>) : TrieNodes {
+internal value class CompactTrieNodes(val nodes: Array<CompactTrieNode>) : TrieNodes {
 
     override val size: Int get() = nodes.size
 
@@ -102,11 +102,12 @@ internal class CompactTrieNode(
          */
         const val MAX_COMPACT_SIZE = 256
 
-        fun from(node: DefaultTrieNode): CompactTrieNode {
+        fun from(node: DefaultTrieNode, remap: Map<Int, Int>? = null): CompactTrieNode {
             require(node.children.size <= MAX_COMPACT_SIZE) { "Cannot compact node. It has too many children." }
 
             val children = LongArray(4).apply {
-                for (input in node.children.keys.sorted()) {
+                for (via in node.children.keys) {
+                    val input = remap?.getValue(via) ?: via
                     val bucket = input.ushr(6)
                     val bucketOffset = 63 - input.rem(64)
                     this[bucket] = this[bucket].setBit(bucketOffset)

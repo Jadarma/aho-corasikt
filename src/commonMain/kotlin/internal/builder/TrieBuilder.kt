@@ -8,10 +8,11 @@ import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
 import io.github.jadarma.ahocorasikt.internal.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.asFunction
-import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
-import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNode
+import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.RemappedCompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 
 internal class TrieBuilder internal constructor(
@@ -54,7 +55,6 @@ internal class TrieBuilder internal constructor(
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
 
-        // Build the Trie connections in the sparse representation.
         val queue = ArrayDeque<TrieBuilderNode>()
         val nodes = arrayOfNulls<DefaultTrieNode>(size)
         var counter = 0
@@ -82,18 +82,39 @@ internal class TrieBuilder internal constructor(
         }
 
         check(counter == size - 1) { "Did not traverse all trie nodes." }
-        @Suppress("UNCHECKED_CAST")
-        nodes as Array<DefaultTrieNode>
 
-        // Check for optimizations and build the appropriate variant.
+        @Suppress("UNCHECKED_CAST")
+        val trieNodes = optimize(nodes as Array<DefaultTrieNode>)
+        return TrieImpl(overlap, matchType, caseSensitivity, trieNodes)
+    }
+
+    @Suppress("CyclomaticComplexMethod")
+    private fun optimize(original: Array<DefaultTrieNode>): TrieNodes {
+        val needsRemapping = alphabet.size > MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
 
-        val trieNodes: TrieNodes = if(canCompact && optimizationLevel >= 1) {
-            CompactTrieNodes.from(nodes)
-        } else {
-            DefaultTrieNodes(nodes)
+        val optLevel = when (optimizationLevel) {
+            0 -> 0
+            1 -> check(canCompact && !needsRemapping).let { 1 }
+            2 -> check(canCompact).let { 2 }
+            else -> when {
+                !canCompact -> 0
+                !needsRemapping -> 1
+                needsRemapping -> 2
+                else -> 0
+            }
         }
 
-        return TrieImpl(overlap, matchType, caseSensitivity, trieNodes)
+        val remapping = alphabet
+            .takeIf { needsRemapping || optimizationLevel == 2 }.orEmpty()
+            .sorted().withIndex()
+            .associate { it.value to it.index }
+
+        return when (optLevel) {
+            0 -> DefaultTrieNodes(original)
+            1 -> CompactTrieNodes.from(original)
+            2 -> RemappedCompactTrieNodes.from(original, remapping)
+            else -> error("Invalid optimization setting.")
+        }
     }
 }
