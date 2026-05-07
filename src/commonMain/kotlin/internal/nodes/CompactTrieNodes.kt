@@ -2,6 +2,7 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.nodes
 
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import kotlin.math.absoluteValue
@@ -40,7 +41,7 @@ internal value class CompactTrieNodes(val nodes: Array<CompactTrieNode>) : TrieN
 
     companion object {
 
-        fun from(nodes: Array<DefaultTrieNode>): CompactTrieNodes {
+        fun from(nodes: Array<TrieBuilderNode>): CompactTrieNodes {
             val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it]) }
             return CompactTrieNodes(compacted)
         }
@@ -102,7 +103,7 @@ internal class CompactTrieNode(
          */
         const val MAX_COMPACT_SIZE = 256
 
-        fun from(node: DefaultTrieNode, remap: Map<Int, Int>? = null): CompactTrieNode {
+        fun from(node: TrieBuilderNode, remap: Map<Int, Int>? = null): CompactTrieNode {
             require(node.children.size <= MAX_COMPACT_SIZE) { "Cannot compact node. It has too many children." }
 
             val children = LongArray(4).apply {
@@ -116,9 +117,9 @@ internal class CompactTrieNode(
 
             return CompactTrieNode(
                 depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
-                suffixNode = node.suffixNode,
-                failNode = node.failNode,
-                childOffset = node.children.minByOrNull { it.key }?.value ?: -1,
+                suffixNode = node.suffixNode?.index ?: -1,
+                failNode = node.failNode.index,
+                childOffset = node.children.minByOrNull { it.key }?.value?.index ?: -1,
                 children0 = children[0],
                 children1 = children[1],
                 children2 = children[2],

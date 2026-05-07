@@ -10,7 +10,6 @@ import io.github.jadarma.ahocorasikt.internal.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
-import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNode
 import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.RemappedCompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
@@ -56,11 +55,11 @@ internal class TrieBuilder internal constructor(
         built = true
 
         val queue = ArrayDeque<TrieBuilderNode>()
-        val nodes = arrayOfNulls<DefaultTrieNode>(size)
+        val nodes = arrayOfNulls<TrieBuilderNode>(size)
         var counter = 0
         var inserted = 0
 
-        nodes[0] = root.run {
+        nodes[0] = root.apply {
             index = 0
             failNode = root
             children.entries.sortedBy { it.key }.forEach { (_, child) ->
@@ -68,28 +67,27 @@ internal class TrieBuilder internal constructor(
                 child.failNode = this
                 queue.addLast(child)
             }
-            build()
         }
 
         while (queue.isNotEmpty()) {
             val node = queue.removeFirst()
+            nodes[++inserted] = node
             for ((_, child) in node.children.entries.sortedBy { it.key }) {
                 child.index = ++counter
                 child.compute()
                 queue.addLast(child)
             }
-            nodes[++inserted] = node.build()
         }
 
         check(counter == size - 1) { "Did not traverse all trie nodes." }
 
         @Suppress("UNCHECKED_CAST")
-        val trieNodes = optimize(nodes as Array<DefaultTrieNode>)
+        val trieNodes = optimize(nodes as Array<TrieBuilderNode>)
         return TrieImpl(overlap, matchType, caseSensitivity, trieNodes)
     }
 
     @Suppress("CyclomaticComplexMethod")
-    private fun optimize(original: Array<DefaultTrieNode>): TrieNodes {
+    private fun optimize(original: Array<TrieBuilderNode>): TrieNodes {
         val needsRemapping = alphabet.size > MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
 
@@ -111,7 +109,7 @@ internal class TrieBuilder internal constructor(
             .associate { it.value to it.index }
 
         return when (optLevel) {
-            0 -> DefaultTrieNodes(original)
+            0 -> DefaultTrieNodes.from(original)
             1 -> CompactTrieNodes.from(original)
             2 -> RemappedCompactTrieNodes.from(original, remapping)
             else -> error("Invalid optimization setting.")

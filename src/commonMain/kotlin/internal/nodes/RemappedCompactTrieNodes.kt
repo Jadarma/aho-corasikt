@@ -2,6 +2,7 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.nodes
 
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 
 /**
@@ -22,7 +23,7 @@ internal class RemappedCompactTrieNodes private constructor(
 
     companion object {
 
-        fun from(nodes: Array<DefaultTrieNode>, remap: Map<Int, Int>): RemappedCompactTrieNodes {
+        fun from(nodes: Array<TrieBuilderNode>, remap: Map<Int, Int>): RemappedCompactTrieNodes {
             require(remap.size <= MAX_COMPACT_SIZE) { "Invalid remap: too many inputs." }
             require(remap.values.all { it < MAX_COMPACT_SIZE }) { "Invalid remap: input values too large." }
             val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it], remap) }

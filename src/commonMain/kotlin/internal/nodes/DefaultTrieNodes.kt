@@ -2,6 +2,7 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.nodes
 
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
 import kotlin.jvm.JvmInline
 import kotlin.math.absoluteValue
 
@@ -30,6 +31,22 @@ internal value class DefaultTrieNodes(val nodes: Array<DefaultTrieNode>) : TrieN
             dest = nodes[dest.failNode]
         }
         return dest.children[input] ?: dest.failNode
+    }
+
+    companion object {
+
+        fun from(original: Array<TrieBuilderNode>): DefaultTrieNodes {
+            val nodes = Array(original.size) {
+                val node = original[it]
+                DefaultTrieNode(
+                    depthAndMatch = node.depth * if (node.isMatch) 1 else -1,
+                    suffixNode = node.suffixNode?.index ?: -1,
+                    failNode = node.failNode.index,
+                    children = node.children.entries.associate { (k, v) -> k to v.index },
+                )
+            }
+            return DefaultTrieNodes(nodes)
+        }
     }
 }
 

@@ -2,8 +2,6 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.builder
 
-import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNode
-
 /** A node of a Trie that is still in its building phase. */
 internal class TrieBuilderNode(
     private val parent: TrieBuilderNode?,
@@ -44,11 +42,4 @@ internal class TrieBuilderNode(
         }
         return dest.children.getOrElse(input) { dest.failNode }
     }
-
-    fun build(): DefaultTrieNode = DefaultTrieNode(
-        depthAndMatch = depth * if (isMatch) 1 else -1,
-        suffixNode = suffixNode?.index ?: -1,
-        failNode = failNode.index,
-        children = children.entries.associate { (k, v) -> k to v.index },
-    )
 }
