@@ -12,8 +12,8 @@ import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MA
  * Most single-language Unicode tries should be covered by this optimization.
  */
 internal class RemappedCompactTrieNodes private constructor(
-    private val remap: Map<Int, Int>,
     private val nodes: CompactTrieNodes,
+    private val remap: Map<Int, Int>,
 ) : TrieNodes by nodes {
 
     override fun next(index: Int, input: Int): Int {
@@ -27,8 +27,7 @@ internal class RemappedCompactTrieNodes private constructor(
             require(remap.size <= MAX_COMPACT_SIZE) { "Invalid remap: too many inputs." }
             require(remap.values.all { it < MAX_COMPACT_SIZE }) { "Invalid remap: input values too large." }
             val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it], remap) }
-            val compactedNodes = CompactTrieNodes(compacted)
-            return RemappedCompactTrieNodes(remap, compactedNodes)
+            return RemappedCompactTrieNodes(CompactTrieNodes(compacted), remap)
         }
     }
 }
