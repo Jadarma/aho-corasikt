@@ -54,32 +54,30 @@ internal class TrieBuilder internal constructor(
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
 
-        val queue = ArrayDeque<TrieBuilderNode>()
         val nodes = arrayOfNulls<TrieBuilderNode>(size)
-        var counter = 0
-        var inserted = 0
+        var head = 1
+        var tail = 1
 
         nodes[0] = root.apply {
             index = 0
             failNode = root
             children.entries.sortedBy { it.key }.forEach { (_, child) ->
-                child.index = ++counter
+                child.index = tail
                 child.failNode = this
-                queue.addLast(child)
+                nodes[tail++] = child
             }
         }
 
-        while (queue.isNotEmpty()) {
-            val node = queue.removeFirst()
-            nodes[++inserted] = node
-            for ((_, child) in node.children.entries.sortedBy { it.key }) {
-                child.index = ++counter
+        while(head < nodes.size) {
+            val node = nodes[head++]!!
+            for((_, child) in node.children.entries.sortedBy { it.key }) {
+                child.index = tail
                 child.compute()
-                queue.addLast(child)
+                nodes[tail++] = child
             }
         }
 
-        check(counter == size - 1) { "Did not traverse all trie nodes." }
+        check(head == tail && tail == size) { "Did not traverse all trie nodes." }
 
         @Suppress("UNCHECKED_CAST")
         val trieNodes = optimize(nodes as Array<TrieBuilderNode>)

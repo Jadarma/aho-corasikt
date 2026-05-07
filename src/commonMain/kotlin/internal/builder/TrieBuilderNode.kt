@@ -20,26 +20,16 @@ internal class TrieBuilderNode(
 
     /** Calculate the fail and suffix nodes. Should only be called after all nodes of lesser depth were computed. */
     fun compute() {
-        if (parent == null) {
-            failNode = this
-            return
-        }
-        failNode = parent.failNode.next(via)
-        var suffixSearcher = failNode
-        while (suffixSearcher.parent != null && !suffixSearcher.isMatch) {
-            suffixSearcher = suffixSearcher.failNode
-        }
-        if (suffixSearcher.isMatch) {
-            suffixNode = suffixSearcher
-        }
+        failNode = parent!!.failNode.next(via)
+        var suffix = failNode
+        while (!suffix.isMatch && suffix.depth > 0) suffix = suffix.failNode
+        if (suffix.isMatch) suffixNode = suffix
     }
 
     /** Calculate the next node that should be visited if receiving [input]. */
     private fun next(input: Int): TrieBuilderNode {
         var dest = this
-        while (dest.parent != null && !dest.children.containsKey(input)) {
-            dest = dest.failNode
-        }
+        while (!dest.children.containsKey(input) && dest.depth > 0) dest = dest.failNode
         return dest.children.getOrElse(input) { dest.failNode }
     }
 }
