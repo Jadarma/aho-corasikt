@@ -4,11 +4,13 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+
+    alias(libs.plugins.benchmark)
     alias(libs.plugins.detekt)
     alias(libs.plugins.kotest)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.benchmark)
+    alias(libs.plugins.testResources)
 }
 
 group = "io.github.jadarma.ahocorasikt"
@@ -52,6 +54,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotest.engine)
                 implementation(libs.kotest.assertions)
+                implementation(libs.testResources)
             }
         }
         val jvmTest by getting {
@@ -171,8 +174,10 @@ kotlin {
         targets.matching { it.name in benchmarkTargets }.configureEach {
             compilations {
                 val main by getting
+                val test by getting
                 val benchmark by creating {
                     associateWith(main)
+                    associateWith(test)
                     defaultSourceSet.dependsOn(commonBenchmark)
                 }
             }
