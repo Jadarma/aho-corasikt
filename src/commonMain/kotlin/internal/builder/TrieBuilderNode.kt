@@ -5,7 +5,6 @@ package io.github.jadarma.ahocorasikt.internal.builder
 /** A node of a Trie that is still in its building phase. */
 internal class TrieBuilderNode(
     private val parent: TrieBuilderNode?,
-    private val via: Int,
     internal val payload: Any?,
 ) {
 
@@ -19,8 +18,10 @@ internal class TrieBuilderNode(
 
     val children: MutableMap<Int, TrieBuilderNode> = mutableMapOf()
 
-    /** Calculate the fail and suffix nodes. Should only be called after all nodes of lesser depth were computed. */
-    fun compute() {
+    /**
+     * Calculate the fail and suffix nodes. Should only be called after all nodes of lesser depth were computed.
+     * The [via] is the value used to transition from the parent to this node. */
+    fun compute(via: Int) {
         failNode = parent!!.failNode.next(via)
         var suffix = failNode
         while (!suffix.isMatch && suffix.depth > 0) suffix = suffix.failNode

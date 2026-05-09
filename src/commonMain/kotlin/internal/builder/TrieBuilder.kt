@@ -27,7 +27,7 @@ internal class TrieBuilder<T: Any> internal constructor(
     /** Internal flag used only for testing. All production Tries are optimized. */
     internal var optimizationLevel: Int = Int.MAX_VALUE
 
-    private val root = TrieBuilderNode(null, -1, null)
+    private val root = TrieBuilderNode(null, null)
     private var size = 1
 
     private val alphabet = mutableSetOf<Int>()
@@ -49,7 +49,7 @@ internal class TrieBuilder<T: Any> internal constructor(
                 alphabet.add(c)
                 node.children.getOrPut(c) {
                     size++
-                    TrieBuilderNode(parent = node, via = c, payload)
+                    TrieBuilderNode(parent = node, payload)
                 }
             }
             .apply { isMatch = true }
@@ -85,9 +85,9 @@ internal class TrieBuilder<T: Any> internal constructor(
             if(node.payload != null) {
                 outputs[node.index] = payloads.getValue(node.payload as T)
             }
-            for((_, child) in node.children.entries.sortedBy { it.key }) {
+            for((input, child) in node.children.entries.sortedBy { it.key }) {
                 child.index = tail
-                child.compute()
+                child.compute(via = input)
                 nodes[tail++] = child
             }
         }
