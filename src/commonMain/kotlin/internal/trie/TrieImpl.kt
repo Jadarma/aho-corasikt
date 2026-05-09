@@ -1,11 +1,13 @@
 // Copyright © 2026 Dan Cîmpianu
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
-package io.github.jadarma.ahocorasikt.internal
+package io.github.jadarma.ahocorasikt.internal.trie
 
 import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
+import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.internal.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.overlap.Overlapper
 
@@ -14,7 +16,7 @@ internal class TrieImpl(
     override val matchType: MatchType,
     override val caseSensitivity: CaseSensitivity,
     private val nodes: TrieNodes,
-) : Trie {
+) : Trie, PayloadTrie<Nothing> {
 
     override val size get() = nodes.size
     override val depth get() = nodes.depth
@@ -67,4 +69,10 @@ internal class TrieImpl(
 
         yieldAll(overlapper.finalCheck())
     }
+
+    override fun contains(payload: Nothing) =
+        throw UnsupportedOperationException("This trie was not built with payload supports.")
+
+    override fun searchWithPayload(text: CharSequence, requireNoOverlaps: Boolean) =
+        throw UnsupportedOperationException("This trie was not built with payload supports.")
 }

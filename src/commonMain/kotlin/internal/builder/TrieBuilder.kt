@@ -5,56 +5,68 @@ package io.github.jadarma.ahocorasikt.internal.builder
 import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
+import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.TrieImpl
+import io.github.jadarma.ahocorasikt.internal.trie.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.RemappedCompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
+import io.github.jadarma.ahocorasikt.internal.trie.PayloadTrieImpl
 
-internal class TrieBuilder internal constructor(
+internal class TrieBuilder<T: Any> internal constructor(
     private val caseSensitivity: CaseSensitivity,
     private val matchType: MatchType,
     private val overlap: Overlap,
-) : Trie.Builder {
+) : Trie.Builder, PayloadTrie.Builder<T> {
 
     private var built = false
 
     /** Internal flag used only for testing. All production Tries are optimized. */
     internal var optimizationLevel: Int = Int.MAX_VALUE
 
-    private val root = TrieBuilderNode(null, -1)
+    private val root = TrieBuilderNode(null, -1, null)
     private var size = 1
 
     private val alphabet = mutableSetOf<Int>()
+    private val payloads = LinkedHashMap<T, Int>()
 
     private var caseMapping = caseSensitivity.asFunction()
 
-    override fun add(word: CharSequence): TrieBuilder {
+    private fun addInternal(word: CharSequence, payload: T?) {
         check(!built) { "TrieBuilder already consumed." }
         require(word.isNotEmpty()) { "Word cannot be empty." }
+
+        if(payload != null && payload !in payloads) {
+            payloads[payload] = payloads.size
+        }
+
         word
             .fold(root) { node, char ->
                 val c = caseMapping(char).code
                 alphabet.add(c)
                 node.children.getOrPut(c) {
                     size++
-                    TrieBuilderNode(parent = node, via = c)
+                    TrieBuilderNode(parent = node, via = c, payload)
                 }
             }
             .apply { isMatch = true }
-
-        return this
     }
 
-    override fun build(): Trie {
+    override fun add(word: CharSequence): Trie.Builder = apply { addInternal(word, null) }
+
+    override fun add(word: CharSequence, payload: T): PayloadTrie.Builder<T> = apply { addInternal(word, payload) }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun build(): PayloadTrie<T> {
         check(!built) { "TrieBuilder already consumed." }
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
 
         val nodes = arrayOfNulls<TrieBuilderNode>(size)
+        val outputs = mutableMapOf<Int, Int>()
         var head = 1
         var tail = 1
 
@@ -70,6 +82,9 @@ internal class TrieBuilder internal constructor(
 
         while(head < nodes.size) {
             val node = nodes[head++]!!
+            if(node.payload != null) {
+                outputs[node.index] = payloads.getValue(node.payload as T)
+            }
             for((_, child) in node.children.entries.sortedBy { it.key }) {
                 child.index = tail
                 child.compute()
@@ -78,10 +93,20 @@ internal class TrieBuilder internal constructor(
         }
 
         check(head == tail && tail == size) { "Did not traverse all trie nodes." }
-
-        @Suppress("UNCHECKED_CAST")
         val trieNodes = optimize(nodes as Array<TrieBuilderNode>)
-        return TrieImpl(overlap, matchType, caseSensitivity, trieNodes)
+
+        return if(outputs.isNotEmpty()) {
+            PayloadTrieImpl(
+                overlap = overlap,
+                matchType = matchType,
+                caseSensitivity = caseSensitivity,
+                nodes = trieNodes,
+                payloads = ArrayList<T>(outputs.size).apply { addAll(payloads.keys) },
+                outputs = outputs
+            )
+        } else {
+            TrieImpl(overlap, matchType, caseSensitivity, trieNodes) as PayloadTrie<T>
+        }
     }
 
     @Suppress("CyclomaticComplexMethod")

@@ -61,6 +61,7 @@ public fun CharSequence.indexOfLast(trie: Trie): Int =
 
 /**
  * Splits the sequence to a sequence of substrings delimited by [trie] matches.
+ * The even-indexed values are non-matches, and the odd-indexed values are matches.
  * Since the matches need to not overlap for the split to make sense, respects the [trie]'s overlap configuration.
  * If set to [Overlap.Allowed], then [Overlap.Leftmost] will be used instead.
  */
@@ -83,6 +84,7 @@ public fun CharSequence.splitToSequence(trie: Trie, limit: Int = 0): Sequence<St
 
 /**
  * Splits the sequence to a list of substrings delimited by [trie] matches.
+ * The even-indexed values are non-matches, and the odd-indexed values are matches.
  * Since the matches need to not overlap for the split to make sense, respects the [trie]'s overlap configuration.
  * If set to [Overlap.Allowed], then [Overlap.Leftmost] will be used instead.
  */
@@ -100,8 +102,8 @@ public fun <R> CharSequence.map(trie: Trie, transform: (String) -> R): Sequence<
         .map(transform)
 
 /**
- * Returns a sequence containing only the non-null the results of applying the given [transform] function to each
- * substring in the original sequence that matches the [trie].
+ * Returns a sequence containing only the non-null results of applying the given [transform] function to each substring
+ * in the original sequence that matches the [trie].
  */
 public fun <R : Any> CharSequence.mapNotNull(trie: Trie, transform: (String) -> R?): Sequence<R> =
     trie
@@ -119,8 +121,8 @@ public fun <R> CharSequence.mapIndexed(trie: Trie, transform: (index: Int, Strin
         .map { range -> transform(range.first, substring(range)) }
 
 /**
- * Returns a sequence containing the results of applying the given [transform] function to each substring in the
- * original sequence that matches the [trie] and its starting index, and keeping only the non-null results.
+ * Returns a sequence containing only the non-null results of applying the given [transform] function to each substring
+ * in the original sequence that matches the [trie] and its starting index, and keeping only the non-null results.
  */
 public fun <R : Any> CharSequence.mapIndexedNotNull(trie: Trie, transform: (index: Int, String) -> R?): Sequence<R> =
     trie
@@ -128,8 +130,8 @@ public fun <R : Any> CharSequence.mapIndexedNotNull(trie: Trie, transform: (inde
         .mapNotNull { range -> transform(range.first, substring(range)) }
 
 /**
- * Returns a sequence of all elements yielded from results of [transform] function being invoked on each substring in
- * the original sequence that matches the [trie].
+ * Returns a sequence of all elements yielded from the [transform] function being invoked on each substring in the
+ * original sequence that matches the [trie].
  */
 public fun <R> CharSequence.flatMap(trie: Trie, transform: (String) -> Iterable<R>): Sequence<R> =
     trie
@@ -138,8 +140,8 @@ public fun <R> CharSequence.flatMap(trie: Trie, transform: (String) -> Iterable<
         .flatMap(transform)
 
 /**
- * Returns a sequence of all elements yielded from results of [transform] function being invoked on each substring in
- * the original sequence that matches the [trie] and its starting index.
+ * Returns a sequence of all elements yielded from the [transform] function being invoked on each substring in the
+ * original sequence that matches the [trie] and its starting index.
  */
 public fun <R> CharSequence.flatMapIndexed(trie: Trie, transform: (index: Int, String) -> Iterable<R>): Sequence<R> =
     trie
@@ -155,7 +157,7 @@ public fun CharSequence.remove(trie: Trie): String =
     this.replace(trie, replacement = "")
 
 /**
- * Returns a new string obtained by replacing each substring of this char sequence that matches the give [trie] with
+ * Returns a new string obtained by replacing each substring of this char sequence that matches the given [trie] with
  * a [replacement].
  * Since the matches need to not overlap for the split to make sense, respects the [trie]'s overlap configuration.
  * If set to [Overlap.Allowed], then [Overlap.Leftmost] will be used instead.
@@ -185,11 +187,11 @@ public fun CharSequence.replace(trie: Trie, transform: (String) -> CharSequence)
  * Returns a new string obtained by applying the [transform] function on each span as resulted from [splitting][split]
  * the original sequence using the [trie], and whether it is a match or not.
  */
-public fun CharSequence.reformat(trie: Trie, transform: (isMatch: Boolean, String) -> CharSequence): String {
+public fun CharSequence.reformat(trie: Trie, transform: (String, isMatch: Boolean) -> CharSequence): String {
     val sb = StringBuilder()
     var isMatch = false
     for (span in splitToSequence(trie)) {
-        sb.append(transform(isMatch, span))
+        sb.append(transform(span, isMatch))
         isMatch = !isMatch
     }
     return sb.toString()

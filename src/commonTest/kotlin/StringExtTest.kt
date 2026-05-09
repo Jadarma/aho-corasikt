@@ -244,7 +244,7 @@ class StringExtTest : FunSpec({
 
         test("can reformat entire input") {
             text
-                .reformat(trie) { isMatch, span -> if (isMatch) "<$span>" else span.uppercase() }
+                .reformat(trie) { span, isMatch -> if (isMatch) "<$span>" else span.uppercase() }
                 .shouldBe(
                     """
                         L<ore>M <ipsum> DOLOR SIT <amet>, CONSECT<et>UR ADIPISCING ELIT,

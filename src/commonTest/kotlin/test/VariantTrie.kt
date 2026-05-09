@@ -97,7 +97,7 @@ fun Trie.Companion.ofVariants(
     fun buildWithLevel(level: Int): Trie = Trie
         .builder(caseSensitivity, matchType, overlap)
         .addAll(keywords)
-        .apply { (this as TrieBuilder).optimizationLevel = level }
+        .apply { (this as TrieBuilder<*>).optimizationLevel = level }
         .build()
 
     val default = buildWithLevel(0)

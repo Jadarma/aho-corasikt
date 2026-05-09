@@ -153,6 +153,7 @@ kover {
                 classes("$group.*")
             }
             excludes {
+                packages("$group.benchmark")
                 classes($$"*.*$DefaultImpls")
             }
         }

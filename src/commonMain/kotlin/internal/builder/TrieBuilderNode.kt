@@ -6,6 +6,7 @@ package io.github.jadarma.ahocorasikt.internal.builder
 internal class TrieBuilderNode(
     private val parent: TrieBuilderNode?,
     private val via: Int,
+    internal val payload: Any?,
 ) {
 
     var index: Int = -1
