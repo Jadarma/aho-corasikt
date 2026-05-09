@@ -102,8 +102,8 @@ fun Trie.Companion.ofVariants(
 
     val default = buildWithLevel(0)
     val variants = buildMap {
-        if (canCompact && !needsRemapping) put("Compact", buildWithLevel(1))
-        if (canCompact && needsRemapping) put("Remapped", buildWithLevel(2))
+        if (canCompact && needsRemapping) put("Remapped", buildWithLevel(1))
+        if (canCompact && !needsRemapping) put("Compact", buildWithLevel(2))
     }
 
     return if(variants.isEmpty()) default

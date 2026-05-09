@@ -32,8 +32,8 @@ open class LoremIpsumSearch {
         val words = Resource("lorem/words.txt").readText().lineSequence().filter(String::isNotEmpty)
 
         val defaultBuilder = Trie.builder().apply { (this as TrieBuilder<*>).optimizationLevel = 0 }
-        val compactBuilder = Trie.builder().apply { (this as TrieBuilder<*>).optimizationLevel = 1 }
-        val remappedBuilder = Trie.builder().apply { (this as TrieBuilder<*>).optimizationLevel = 2 }
+        val remappedBuilder = Trie.builder().apply { (this as TrieBuilder<*>).optimizationLevel = 1 }
+        val compactBuilder = Trie.builder().apply { (this as TrieBuilder<*>).optimizationLevel = 2 }
         val payloadBuilder = PayloadTrie.builder<Int>()
 
         for(word in words) {

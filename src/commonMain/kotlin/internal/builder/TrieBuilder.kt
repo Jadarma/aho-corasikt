@@ -114,27 +114,24 @@ internal class TrieBuilder<T: Any> internal constructor(
         val needsRemapping = alphabet.size > MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
 
-        val optLevel = when (optimizationLevel) {
-            0 -> 0
-            1 -> check(canCompact && !needsRemapping).let { 1 }
-            2 -> check(canCompact).let { 2 }
-            else -> when {
-                !canCompact -> 0
-                !needsRemapping -> 1
-                needsRemapping -> 2
-                else -> 0
-            }
+        val possibleOptimizationLevel = when {
+            !canCompact -> 0
+            needsRemapping -> 1
+            !needsRemapping -> 2
+            else -> 0
         }
 
+        val optLevel = minOf(possibleOptimizationLevel, optimizationLevel)
+
         val remapping = alphabet
-            .takeIf { needsRemapping || optimizationLevel == 2 }.orEmpty()
+            .takeIf { optLevel == 1 }.orEmpty()
             .sorted().withIndex()
             .associate { it.value to it.index }
 
         return when (optLevel) {
             0 -> DefaultTrieNodes.from(original)
-            1 -> CompactTrieNodes.from(original)
-            2 -> RemappedCompactTrieNodes.from(original, remapping)
+            1 -> RemappedCompactTrieNodes.from(original, remapping)
+            2 -> CompactTrieNodes.from(original)
             else -> error("Invalid optimization setting.")
         }
     }
