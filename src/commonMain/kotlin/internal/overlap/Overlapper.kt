@@ -50,6 +50,7 @@ internal sealed class Overlapper {
      * The returned values ***must be immediately consumed*** before calling any other overlapper functions.
      */
     fun check(index: Int): List<IntRange> {
+        flush()
         checkInternal(index)
         flushPending = true
         return validated
@@ -61,6 +62,7 @@ internal sealed class Overlapper {
      * After invoking this function, the overlapper object should not be used anymore.
      */
     fun finalCheck(): List<IntRange> {
+        flush()
         finalizeInternal()
         return validated
     }

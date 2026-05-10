@@ -1,6 +1,7 @@
 package io.github.jadarma.ahocorasikt.internal.overlap
 
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 
 class IgnoredOverlapperTest : FunSpec({
@@ -13,5 +14,7 @@ class IgnoredOverlapperTest : FunSpec({
         for(range in ranges) overlapper.offer(range)
         yielded += overlapper.check(10)
         yielded.shouldContainExactly(ranges)
+        overlapper.check(100).shouldBeEmpty()
+        overlapper.finalCheck().shouldBeEmpty()
     }
 })
