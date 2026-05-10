@@ -27,15 +27,14 @@ public interface PayloadTrie<T : Any> : Trie {
      * @param text              The input character sequence to search.
      * @param requireNoOverlaps If `true` and this tries' [overlap] is [Allowed], forces the use of [Leftmost] instead,
      *                          in order to ensure no yielded match ranges overlap.
-     * @return A lazy iterable of emits, comprising three values:
+     * @return A lazy iterable of emits, comprising two values:
      *         - An [IntRange] representing the indices of the [text] where a match was found.
-     *         - A [CharSequence] slice of the originally matched text.
      *         - The [T] payload associated with the matched keyword.
      */
     public fun searchWithPayload(
         text: CharSequence,
         requireNoOverlaps: Boolean = false,
-    ): Sequence<Triple<IntRange, CharSequence, T>>
+    ): Sequence<Pair<IntRange, T>>
 
     /** A payload trie builder. */
     public interface Builder<T : Any> {

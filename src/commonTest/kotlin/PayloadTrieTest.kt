@@ -13,7 +13,7 @@ class PayloadTrieTest : FunSpec({
                 .add("world", 2)
                 .build()
         }
-        trie.searchWithPayload("hello world").sumOf { it.third } shouldBe 3
+        trie.searchWithPayload("hello world").sumOf { it.second } shouldBe 3
         trie.depth shouldBe 5
         trie.size shouldBe 11
     }
@@ -22,7 +22,7 @@ class PayloadTrieTest : FunSpec({
         val builder = PayloadTrie.builder<Int>()
         shouldThrow<IllegalArgumentException> { builder.add("", 0) }
         val trie = builder.add("hello", 1).add("world", 2).build()
-        trie.searchWithPayload("hello world").sumOf { it.third } shouldBe 3
+        trie.searchWithPayload("hello world").sumOf { it.second } shouldBe 3
         trie.depth shouldBe 5
         trie.size shouldBe 11
     }
@@ -30,7 +30,7 @@ class PayloadTrieTest : FunSpec({
     test("Builder can add multiple words at once") {
         val words = setOf("hello", "world")
         val trie = shouldNotThrowAny { PayloadTrie.builder<Int>().addAll(words, 2).build() }
-        trie.searchWithPayload("hello world").sumOf { it.third } shouldBe 4
+        trie.searchWithPayload("hello world").sumOf { it.second } shouldBe 4
         trie.depth shouldBe 5
         trie.size shouldBe 11
     }
@@ -40,7 +40,7 @@ class PayloadTrieTest : FunSpec({
         val builder = PayloadTrie.builder<Int>()
         shouldThrow<IllegalArgumentException> { builder.addAll(words, 1) }
         val trie = builder.build()
-        trie.searchWithPayload("hello world").sumOf { it.third } shouldBe 1 // Hits hello, but not world.
+        trie.searchWithPayload("hello world").sumOf { it.second } shouldBe 1 // Hits hello, but not world.
         trie.depth shouldBe 5
         trie.size shouldBe 6
     }

@@ -83,7 +83,7 @@ internal class PayloadTrieImpl<T : Any>(
     override fun searchWithPayload(
         text: CharSequence,
         requireNoOverlaps: Boolean
-    ): Sequence<Triple<IntRange, CharSequence, T>> = sequence {
+    ): Sequence<Pair<IntRange, T>> = sequence {
         val source = text.iterator()
         val charMapper = caseSensitivity.asFunction()
         val boundCheck = matchType.asFunction()
@@ -97,14 +97,14 @@ internal class PayloadTrieImpl<T : Any>(
         var index = 0
         val yieldEvery = 256
 
-        val candidates = mutableMapOf<IntRange, Triple<IntRange, CharSequence, T>>()
+        val candidates = mutableMapOf<IntRange, Pair<IntRange, T>>()
 
         fun testAndOffer(range: IntRange, node: Int) {
             val before = text.getOrNull(range.first - 1)
             val after = text.getOrNull(range.last + 1)
             val isValidMatch = (before == null || boundCheck(before)) && (after == null || boundCheck(after))
             if(!isValidMatch) return
-            candidates[range] = Triple(range, text.slice(range), payloads[outputs.getValue(node)])
+            candidates[range] = range to payloads[outputs.getValue(node)]
             overlapper.offer(range)
         }
 
@@ -130,8 +130,8 @@ internal class PayloadTrieImpl<T : Any>(
         yieldEmits(candidates,overlapper.finalCheck(), Int.MAX_VALUE)
     }
 
-    private suspend inline fun SequenceScope<Triple<IntRange, CharSequence, T>>.yieldEmits(
-        candidates: MutableMap<IntRange, Triple<IntRange, CharSequence, T>>,
+    private suspend inline fun SequenceScope<Pair<IntRange, T>>.yieldEmits(
+        candidates: MutableMap<IntRange, Pair<IntRange, T>>,
         ranges: Iterable<IntRange>, index: Int) {
         for(range in ranges) {
             yield(candidates.remove(range)!!)
