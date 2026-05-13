@@ -1,4 +1,5 @@
 import dev.detekt.gradle.Detekt
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
@@ -7,6 +8,7 @@ plugins {
 
     alias(libs.plugins.benchmark)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.dokka)
     alias(libs.plugins.kotest)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)
@@ -199,5 +201,37 @@ benchmark {
         register("macosArm64Benchmark")
         register("linuxX64Benchmark")
     }
+}
+//endregion
+
+//region Benchmark ----------------------------------------------------------------------------------------------------
+dokka {
+    moduleName = "Aho-CorasiKt"
+    moduleVersion = project.version.toString()
+
+    dokkaSourceSets.configureEach {
+        sourceLink {
+            remoteUrl("https://github.com/Jadarma/aho-corasikt/tree/v$version")
+            remoteLineSuffix = "#L"
+        }
+
+        reportUndocumented = true
+        documentedVisibilities = setOf(VisibilityModifier.Public)
+        enableJdkDocumentationLink = false
+        enableKotlinStdLibDocumentationLink = false
+    }
+
+    dokkaPublications.html {
+        offlineMode = true
+        suppressObviousFunctions = true
+        suppressInheritedMembers = true
+    }
+
+    pluginsConfiguration.html {
+        separateInheritedMembers = true
+        footerMessage = "Copyright © 2026 Dan Cîmpianu"
+    }
+
+    dokkaGeneratorIsolation = ClassLoaderIsolation()
 }
 //endregion
