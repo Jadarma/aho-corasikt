@@ -47,7 +47,6 @@ internal class PayloadTrieImpl<T : Any>(
 
         var current = 0
         var index = 0
-        val yieldEvery = 256
 
         fun testAndOffer(range: IntRange) {
             val before = text.getOrNull(range.first - 1)
@@ -69,7 +68,7 @@ internal class PayloadTrieImpl<T : Any>(
                 testAndOffer(range)
                 suffix = nodes.suffixOf(suffix)
             }
-            if(index % yieldEvery == 0) {
+            if(index and 0xFF == 0) {
                 yieldAll(overlapper.check(index))
             }
             index++
@@ -95,7 +94,6 @@ internal class PayloadTrieImpl<T : Any>(
 
         var current = 0
         var index = 0
-        val yieldEvery = 256
 
         val candidates = mutableMapOf<IntRange, Pair<IntRange, T>>()
 
@@ -121,7 +119,7 @@ internal class PayloadTrieImpl<T : Any>(
                 testAndOffer(range, suffix)
                 suffix = nodes.suffixOf(suffix)
             }
-            if(index % yieldEvery == 0) {
+            if(index and 0xFF == 0) {
                 yieldEmits(candidates, overlapper.check(index), index)
             }
             index++
@@ -132,7 +130,9 @@ internal class PayloadTrieImpl<T : Any>(
 
     private suspend inline fun SequenceScope<Pair<IntRange, T>>.yieldEmits(
         candidates: MutableMap<IntRange, Pair<IntRange, T>>,
-        ranges: Iterable<IntRange>, index: Int) {
+        ranges: Iterable<IntRange>,
+        index: Int,
+    ) {
         for(range in ranges) {
             yield(candidates.remove(range)!!)
         }

@@ -39,7 +39,6 @@ internal class TrieImpl(
 
         var current = 0
         var index = 0
-        val yieldEvery = 256
 
         fun testAndOffer(range: IntRange) {
             val before = text.getOrNull(range.first - 1)
@@ -61,7 +60,7 @@ internal class TrieImpl(
                 testAndOffer(range)
                 suffix = nodes.suffixOf(suffix)
             }
-            if(index % yieldEvery == 0) {
+            if(index and 0xFF == 0) {
                 yieldAll(overlapper.check(index))
             }
             index++
