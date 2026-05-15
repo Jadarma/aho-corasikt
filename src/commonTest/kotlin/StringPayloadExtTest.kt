@@ -31,7 +31,7 @@ class StringPayloadExtTest : FunSpec({
         "magna" to 5,
     )
 
-    val trie = PayloadTrie.of(words)
+    val trie = trieOf(words)
 
     context("String matching") {
         test("using matches function") {

@@ -107,25 +107,5 @@ public interface PayloadTrie<T : Any> : Trie {
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Allowed,
         ): Builder<T> = TrieBuilder(caseSensitivity, matchType, overlap)
-
-        /**
-         * Create a new trie using the given settings.
-         * Use when all the keywords are already available, to skip builder boilerplate.
-         *
-         * @param T               The type of payloads this trie can emit.
-         * @param words           The patterns this trie will match, associated with a payload.
-         * @param caseSensitivity How case sensitivity is handled in input strings.
-         *                        By default, every match is case-sensitive.
-         * @param matchType       In what context should matches be emitted.
-         *                        By default, any match is valid.
-         * @param overlap         How the trie should handle matches whose ranges overlap.
-         *                        By default, all matches are emitted.
-         */
-        public fun <T: Any> of(
-            words: Map<out CharSequence, T>,
-            caseSensitivity: CaseSensitivity = Sensitive,
-            matchType: MatchType = Unrestricted,
-            overlap: Overlap = Allowed,
-        ): PayloadTrie<T> = builder<T>(caseSensitivity, matchType, overlap).addAll(words).build()
     }
 }

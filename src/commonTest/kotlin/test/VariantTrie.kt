@@ -79,7 +79,7 @@ class VariantTrie(
 }
 
 /**
- * To be used in testing instead of [Trie.of].
+ * To be used in testing instead of normal builder.
  * Will instead evaluate if the [keywords] would be able to build an optimized trie.
  * If so, returns a [VariantTrie] instead, otherwise delegates to original implementation.
  */

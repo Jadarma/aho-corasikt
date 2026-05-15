@@ -96,24 +96,5 @@ public interface Trie {
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Allowed,
         ): Builder = TrieBuilder<Nothing>(caseSensitivity, matchType, overlap)
-
-        /**
-         * Create a new trie using the given settings.
-         * Use when all the keywords are already available, to skip builder boilerplate.
-         *
-         * @param keywords        The patterns this trie will match.
-         * @param caseSensitivity How case sensitivity is handled in input strings.
-         *                        By default, every match is case-sensitive.
-         * @param matchType       In what context should matches be emitted.
-         *                        By default, any match is valid.
-         * @param overlap         How the trie should handle matches whose ranges overlap.
-         *                        By default, all matches are emitted.
-         */
-        public fun of(
-            keywords: Iterable<CharSequence>,
-            caseSensitivity: CaseSensitivity = Sensitive,
-            matchType: MatchType = Unrestricted,
-            overlap: Overlap = Allowed,
-        ): Trie = builder(caseSensitivity, matchType, overlap).addAll(keywords).build()
     }
 }

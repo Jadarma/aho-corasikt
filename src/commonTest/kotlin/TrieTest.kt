@@ -70,15 +70,4 @@ class TrieTest : FunSpec({
         trie.matchType shouldBe MatchType.WholeWords
         trie.overlap shouldBe Overlap.Leftmost
     }
-
-    test("Shorthand builder can be used to reduce boilerplate") {
-        val words = setOf("hello", "world")
-        val trie = Trie.of(words)
-        trie.search("hello world").count() shouldBe 2
-        trie.depth shouldBe 5
-        trie.size shouldBe 11
-        trie.caseSensitivity shouldBe CaseSensitivity.Sensitive
-        trie.matchType shouldBe MatchType.Unrestricted
-        trie.overlap shouldBe Overlap.Allowed
-    }
 })
