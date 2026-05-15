@@ -6,7 +6,6 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.PayloadTrie
-import io.github.jadarma.ahocorasikt.Trie
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 
 internal class PayloadTrieImpl<T : Any>(
@@ -16,7 +15,7 @@ internal class PayloadTrieImpl<T : Any>(
     nodes: TrieNodes,
     private val payloads: ArrayList<T>,
     private val outputs: Map<Int, Int>,
-) : AbstractTrie(overlap, matchType, caseSensitivity, nodes), Trie, PayloadTrie<T> {
+) : TrieImpl(overlap, matchType, caseSensitivity, nodes), PayloadTrie<T> {
 
     override fun contains(payload: T): Boolean = false
 

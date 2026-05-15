@@ -6,7 +6,7 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity.Sensitive
 import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
 import io.github.jadarma.ahocorasikt.Overlap.Allowed
 import io.github.jadarma.ahocorasikt.Overlap.Leftmost
-import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilder
+import io.github.jadarma.ahocorasikt.internal.builder.PayloadTrieBuilder
 
 /**
  * A payload trie also associates a value of [T] to every keyword in the dictionary.
@@ -106,6 +106,6 @@ public interface PayloadTrie<T : Any> : Trie {
             caseSensitivity: CaseSensitivity = Sensitive,
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Allowed,
-        ): Builder<T> = TrieBuilder(caseSensitivity, matchType, overlap)
+        ): Builder<T> = PayloadTrieBuilder(caseSensitivity, matchType, overlap)
     }
 }

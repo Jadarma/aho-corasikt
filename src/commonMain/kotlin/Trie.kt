@@ -95,6 +95,6 @@ public interface Trie {
             caseSensitivity: CaseSensitivity = Sensitive,
             matchType: MatchType = Unrestricted,
             overlap: Overlap = Allowed,
-        ): Builder = TrieBuilder<Nothing>(caseSensitivity, matchType, overlap)
+        ): Builder = TrieBuilder(caseSensitivity, matchType, overlap)
     }
 }

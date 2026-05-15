@@ -24,14 +24,12 @@ class BuilderExtTest : FunSpec({
             0..4 to "Lorem",
             12..20 to "dolor sit",
         ))
-    }
-
-    fun PayloadTrie<Int>.shouldHaveExpectedPropertiesAndBehavior() {
-        (this as Trie).shouldHaveExpectedPropertiesAndBehavior()
-        searchWithPayload(text).toList() shouldBe listOf(
-            0..4 to "Lorem".length,
-            12..20 to "dolor sit".length,
-        )
+        if(this is PayloadTrie<*>) {
+            searchWithPayload(text).toList() shouldBe listOf(
+                0..4 to "Lorem".length,
+                12..20 to "dolor sit".length,
+            )
+        }
     }
 
     context("Trie builder extensions") {

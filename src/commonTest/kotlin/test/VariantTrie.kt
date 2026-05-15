@@ -7,7 +7,7 @@ import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Overlap.Allowed
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilder
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderBase
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.kotest.assertions.withClue
 import io.kotest.inspectors.forAll
@@ -97,7 +97,7 @@ fun Trie.Companion.ofVariants(
     fun buildWithLevel(level: Int): Trie = Trie
         .builder(caseSensitivity, matchType, overlap)
         .addAll(keywords)
-        .apply { (this as TrieBuilder<*>).optimizationLevel = level }
+        .apply { (this as TrieBuilderBase<*>).optimizationLevel = level }
         .build()
 
     val default = buildWithLevel(0)

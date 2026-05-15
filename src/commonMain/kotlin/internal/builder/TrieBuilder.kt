@@ -7,7 +7,6 @@ import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.trie.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
@@ -15,12 +14,14 @@ import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.RemappedCompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.trie.PayloadTrieImpl
+import io.github.jadarma.ahocorasikt.internal.trie.TrieImpl
+import kotlin.collections.set
 
-internal class TrieBuilder<T: Any> internal constructor(
-    private val caseSensitivity: CaseSensitivity,
-    private val matchType: MatchType,
-    private val overlap: Overlap,
-) : Trie.Builder, PayloadTrie.Builder<T> {
+internal sealed class TrieBuilderBase<T: Any>(
+    val caseSensitivity: CaseSensitivity,
+    val matchType: MatchType,
+    val overlap: Overlap,
+) {
 
     private var built = false
 
@@ -31,11 +32,12 @@ internal class TrieBuilder<T: Any> internal constructor(
     private var size = 1
 
     private val alphabet = mutableSetOf<Int>()
-    private val payloads = LinkedHashMap<T, Int>()
+    private val caseMapping: (Char) -> Char = caseSensitivity.asFunction()
 
-    private var caseMapping = caseSensitivity.asFunction()
+    protected val payloads = LinkedHashMap<T, Int>()
+    protected val outputs = mutableMapOf<Int, Int>()
 
-    private fun addInternal(word: CharSequence, payload: T?) {
+    protected fun addInternal(word: CharSequence, payload: T?) {
         check(!built) { "TrieBuilder already consumed." }
         require(word.isNotEmpty()) { "Word cannot be empty." }
 
@@ -55,18 +57,13 @@ internal class TrieBuilder<T: Any> internal constructor(
             .apply { isMatch = true }
     }
 
-    override fun add(word: CharSequence): Trie.Builder = apply { addInternal(word, null) }
-
-    override fun add(word: CharSequence, payload: T): PayloadTrie.Builder<T> = apply { addInternal(word, payload) }
-
     @Suppress("UNCHECKED_CAST")
-    override fun build(): PayloadTrie<T> {
+    protected fun buildInternal(): TrieNodes {
         check(!built) { "TrieBuilder already consumed." }
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
 
         val nodes = arrayOfNulls<TrieBuilderNode>(size)
-        val outputs = mutableMapOf<Int, Int>()
         var head = 1
         var tail = 1
 
@@ -93,26 +90,13 @@ internal class TrieBuilder<T: Any> internal constructor(
         }
 
         check(head == tail && tail == size) { "Did not traverse all trie nodes." }
-        val trieNodes = optimize(nodes as Array<TrieBuilderNode>)
-
-        return if(outputs.isNotEmpty()) {
-            PayloadTrieImpl(
-                overlap = overlap,
-                matchType = matchType,
-                caseSensitivity = caseSensitivity,
-                nodes = trieNodes,
-                payloads = ArrayList<T>(outputs.size).apply { addAll(payloads.keys) },
-                outputs = outputs
-            )
-        } else {
-            TrieImpl(overlap, matchType, caseSensitivity, trieNodes) as PayloadTrie<T>
-        }
+        return optimize(nodes as Array<TrieBuilderNode>)
     }
 
     @Suppress("CyclomaticComplexMethod")
     private fun optimize(original: Array<TrieBuilderNode>): TrieNodes {
-        val needsRemapping = alphabet.size > MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
+        val needsRemapping = alphabet.max() > MAX_COMPACT_SIZE
 
         val possibleOptimizationLevel = when {
             !canCompact -> 0
@@ -134,5 +118,41 @@ internal class TrieBuilder<T: Any> internal constructor(
             2 -> CompactTrieNodes.from(original)
             else -> error("Invalid optimization setting.")
         }
+    }
+}
+
+internal class TrieBuilder(
+    caseSensitivity: CaseSensitivity,
+    matchType: MatchType,
+    overlap: Overlap,
+) : TrieBuilderBase<Nothing>(caseSensitivity, matchType, overlap), Trie.Builder {
+
+    override fun add(word: CharSequence): Trie.Builder = apply { addInternal(word, null) }
+
+    override fun build(): Trie {
+        val nodes = buildInternal()
+        return TrieImpl(overlap, matchType, caseSensitivity, nodes)
+    }
+}
+
+internal class PayloadTrieBuilder<T : Any>(
+    caseSensitivity: CaseSensitivity,
+    matchType: MatchType,
+    overlap: Overlap,
+) : TrieBuilderBase<T>(caseSensitivity, matchType, overlap), PayloadTrie.Builder<T> {
+
+    override fun add(word: CharSequence, payload: T): PayloadTrie.Builder<T> =
+        apply { addInternal(word, payload) }
+
+    override fun build(): PayloadTrie<T> {
+        val nodes = buildInternal()
+        return PayloadTrieImpl(
+            overlap = overlap,
+            matchType = matchType,
+            caseSensitivity = caseSensitivity,
+            nodes = nodes,
+            payloads = ArrayList<T>(outputs.size).apply { addAll(payloads.keys) },
+            outputs = outputs
+        )
     }
 }
