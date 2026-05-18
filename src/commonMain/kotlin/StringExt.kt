@@ -19,6 +19,12 @@ public inline infix fun CharSequence.matches(trie: Trie): Boolean =
 public operator fun CharSequence.contains(trie: Trie): Boolean =
     trie.search(this).any()
 
+/** Returns whether the trie contains the [word] as a match. */
+public operator fun Trie.contains(word: CharSequence): Boolean {
+    if(word.length > depth) return false
+    return 0..word.lastIndex in search(word)
+}
+
 /** Returns the number of substrings matching the [trie]. */
 public fun CharSequence.count(trie: Trie): Int =
     trie.search(this).count()

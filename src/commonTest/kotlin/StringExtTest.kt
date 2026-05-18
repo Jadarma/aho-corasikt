@@ -36,6 +36,12 @@ class StringExtTest : FunSpec({
             (trie in text).shouldBeTrue()
             (trie in unmatching).shouldBeFalse()
         }
+
+        test("as trie entry") {
+            ("ore" in trie).shouldBeTrue()
+            ("nope" in trie).shouldBeFalse()
+            ("amethyst" in trie).shouldBeFalse()
+        }
     }
 
     test("Counting") {
