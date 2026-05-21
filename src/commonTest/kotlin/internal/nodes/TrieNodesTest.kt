@@ -11,8 +11,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 
 /**
  * Tests that the trie nodes created by the various optimizations perfectly match the theoretical model.
- * Example based on small trie featured on
- * [Wikipedia](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm#/media/File:A_diagram_of_the_Aho-Corasick_string_search_algorithm.svg).
+ * Example based on small trie featured on [Wikipedia](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm).
  */
 class TrieNodesTest : FunSpec({
 

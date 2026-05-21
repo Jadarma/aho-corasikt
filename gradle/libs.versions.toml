@@ -7,7 +7,9 @@ dokka = "2.2.0"          # https://central.sonatype.com/artifact/org.jetbrains.d
 kotest = "6.1.11"        # https://central.sonatype.com/artifact/io.kotest/kotest-framework-engine-jvm/versions
 kover = "0.9.8"          # https://central.sonatype.com/artifact/org.jetbrains.kotlinx.kover/org.jetbrains.kotlinx.kover.gradle.plugin/versions
 ksp = "2.3.7"            # https://central.sonatype.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin/versions
+publishing = "0.36.0"    # https://central.sonatype.com/artifact/com.vanniktech.maven.publish/com.vanniktech.maven.publish.gradle.plugin/versions
 testResources = "0.15.0" # https://plugins.gradle.org/plugin/com.goncalossilva.resources
+toolchains = "1.0.0"     # https://plugins.gradle.org/plugin/org.gradle.toolchains.foojay-resolver-convention
 
 [libraries]
 kotest-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
@@ -16,12 +18,28 @@ kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotes
 kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-runtime", version.ref = "benchmark" }
 testResources = { module = "com.goncalossilva:resources", version.ref = "testResources" }
 
-[plugins]
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
-detekt = { id = "dev.detekt", version.ref = "detekt" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-kotest = { id = "io.kotest", version.ref = "kotest" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-testResources = { id = "com.goncalossilva.resources", version.ref = "testResources" }
+gradlePluginDep-benchmark = { module = "org.jetbrains.kotlinx.benchmark:org.jetbrains.kotlinx.benchmark.gradle.plugin", version.ref = "benchmark" }
+gradlePluginDep-detekt = { module = "dev.detekt:dev.detekt.gradle.plugin", version.ref = "detekt" }
+gradlePluginDep-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+gradlePluginDep-kotest = { module = "io.kotest:io.kotest.gradle.plugin", version.ref = "kotest" }
+gradlePluginDep-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+gradlePluginDep-kover = { module = "org.jetbrains.kotlinx:kover-gradle-plugin", version.ref = "kover" }
+gradlePluginDep-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+gradlePluginDep-publishing = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "publishing" }
+gradlePluginDep-resources = { module = "com.goncalossilva.resources:com.goncalossilva.resources.gradle.plugin", version.ref = "testResources" }
+gradlePluginDep-toolchains = { module = "org.gradle.toolchains.foojay-resolver-convention:org.gradle.toolchains.foojay-resolver-convention.gradle.plugin", version.ref = "toolchains" }
+
+[bundles]
+# Bundles all plugins needed in `buildLogic` so they can be imported in bulk.
+gradlePlugins = [
+    "gradlePluginDep-benchmark",
+    "gradlePluginDep-detekt",
+    "gradlePluginDep-dokka",
+    "gradlePluginDep-kotest",
+    "gradlePluginDep-kotlin",
+    "gradlePluginDep-kover",
+    "gradlePluginDep-ksp",
+    "gradlePluginDep-publishing",
+    "gradlePluginDep-resources",
+    "gradlePluginDep-toolchains",
+]

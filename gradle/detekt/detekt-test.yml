@@ -10,6 +10,8 @@ comments:
     active: false
 
 complexity:
+  LongMethod:
+    active: false
   StringLiteralDuplication:
     active: false
 
