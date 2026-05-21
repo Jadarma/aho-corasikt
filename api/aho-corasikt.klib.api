@@ -1,0 +1,135 @@
+// Klib ABI Dump
+// Targets: [linuxX64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.jadarma.ahocorasikt:aho-corasikt>
+final enum class io.github.jadarma.ahocorasikt/CaseSensitivity : kotlin/Enum<io.github.jadarma.ahocorasikt/CaseSensitivity> { // io.github.jadarma.ahocorasikt/CaseSensitivity|null[0]
+    enum entry AsciiInsensitive // io.github.jadarma.ahocorasikt/CaseSensitivity.AsciiInsensitive|null[0]
+    enum entry Insensitive // io.github.jadarma.ahocorasikt/CaseSensitivity.Insensitive|null[0]
+    enum entry SafeInsensitive // io.github.jadarma.ahocorasikt/CaseSensitivity.SafeInsensitive|null[0]
+    enum entry Sensitive // io.github.jadarma.ahocorasikt/CaseSensitivity.Sensitive|null[0]
+
+    final val entries // io.github.jadarma.ahocorasikt/CaseSensitivity.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.jadarma.ahocorasikt/CaseSensitivity> // io.github.jadarma.ahocorasikt/CaseSensitivity.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.jadarma.ahocorasikt/CaseSensitivity // io.github.jadarma.ahocorasikt/CaseSensitivity.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.jadarma.ahocorasikt/CaseSensitivity> // io.github.jadarma.ahocorasikt/CaseSensitivity.values|values#static(){}[0]
+}
+
+final enum class io.github.jadarma.ahocorasikt/MatchType : kotlin/Enum<io.github.jadarma.ahocorasikt/MatchType> { // io.github.jadarma.ahocorasikt/MatchType|null[0]
+    enum entry Unrestricted // io.github.jadarma.ahocorasikt/MatchType.Unrestricted|null[0]
+    enum entry WhitespaceSeparated // io.github.jadarma.ahocorasikt/MatchType.WhitespaceSeparated|null[0]
+    enum entry WholeWords // io.github.jadarma.ahocorasikt/MatchType.WholeWords|null[0]
+
+    final val entries // io.github.jadarma.ahocorasikt/MatchType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.jadarma.ahocorasikt/MatchType> // io.github.jadarma.ahocorasikt/MatchType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.jadarma.ahocorasikt/MatchType // io.github.jadarma.ahocorasikt/MatchType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.jadarma.ahocorasikt/MatchType> // io.github.jadarma.ahocorasikt/MatchType.values|values#static(){}[0]
+}
+
+final enum class io.github.jadarma.ahocorasikt/Overlap : kotlin/Enum<io.github.jadarma.ahocorasikt/Overlap> { // io.github.jadarma.ahocorasikt/Overlap|null[0]
+    enum entry Allowed // io.github.jadarma.ahocorasikt/Overlap.Allowed|null[0]
+    enum entry Leftmost // io.github.jadarma.ahocorasikt/Overlap.Leftmost|null[0]
+    enum entry Longest // io.github.jadarma.ahocorasikt/Overlap.Longest|null[0]
+
+    final val entries // io.github.jadarma.ahocorasikt/Overlap.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.jadarma.ahocorasikt/Overlap> // io.github.jadarma.ahocorasikt/Overlap.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.jadarma.ahocorasikt/Overlap // io.github.jadarma.ahocorasikt/Overlap.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.jadarma.ahocorasikt/Overlap> // io.github.jadarma.ahocorasikt/Overlap.values|values#static(){}[0]
+}
+
+abstract interface <#A: kotlin/Any> io.github.jadarma.ahocorasikt/PayloadTrie : io.github.jadarma.ahocorasikt/Trie { // io.github.jadarma.ahocorasikt/PayloadTrie|null[0]
+    abstract fun contains(#A): kotlin/Boolean // io.github.jadarma.ahocorasikt/PayloadTrie.contains|contains(1:0){}[0]
+    abstract fun searchWithPayload(kotlin/CharSequence, kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin/Pair<kotlin.ranges/IntRange, #A>> // io.github.jadarma.ahocorasikt/PayloadTrie.searchWithPayload|searchWithPayload(kotlin.CharSequence;kotlin.Boolean){}[0]
+
+    abstract interface <#A1: kotlin/Any> Builder { // io.github.jadarma.ahocorasikt/PayloadTrie.Builder|null[0]
+        abstract fun add(kotlin/CharSequence, #A1): io.github.jadarma.ahocorasikt/PayloadTrie.Builder<#A1> // io.github.jadarma.ahocorasikt/PayloadTrie.Builder.add|add(kotlin.CharSequence;1:0){}[0]
+        abstract fun build(): io.github.jadarma.ahocorasikt/PayloadTrie<#A1> // io.github.jadarma.ahocorasikt/PayloadTrie.Builder.build|build(){}[0]
+        open fun addAll(kotlin.collections/Iterable<kotlin/CharSequence>, #A1): io.github.jadarma.ahocorasikt/PayloadTrie.Builder<#A1> // io.github.jadarma.ahocorasikt/PayloadTrie.Builder.addAll|addAll(kotlin.collections.Iterable<kotlin.CharSequence>;1:0){}[0]
+        open fun addAll(kotlin.collections/Map<out kotlin/CharSequence, #A1>): io.github.jadarma.ahocorasikt/PayloadTrie.Builder<#A1> // io.github.jadarma.ahocorasikt/PayloadTrie.Builder.addAll|addAll(kotlin.collections.Map<out|kotlin.CharSequence,1:0>){}[0]
+    }
+
+    final object Companion { // io.github.jadarma.ahocorasikt/PayloadTrie.Companion|null[0]
+        final fun <#A2: kotlin/Any> builder(io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/PayloadTrie.Builder<#A2> // io.github.jadarma.ahocorasikt/PayloadTrie.Companion.builder|builder(io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){0§<kotlin.Any>}[0]
+    }
+}
+
+abstract interface io.github.jadarma.ahocorasikt/Trie { // io.github.jadarma.ahocorasikt/Trie|null[0]
+    abstract val caseSensitivity // io.github.jadarma.ahocorasikt/Trie.caseSensitivity|{}caseSensitivity[0]
+        abstract fun <get-caseSensitivity>(): io.github.jadarma.ahocorasikt/CaseSensitivity // io.github.jadarma.ahocorasikt/Trie.caseSensitivity.<get-caseSensitivity>|<get-caseSensitivity>(){}[0]
+    abstract val depth // io.github.jadarma.ahocorasikt/Trie.depth|{}depth[0]
+        abstract fun <get-depth>(): kotlin/Int // io.github.jadarma.ahocorasikt/Trie.depth.<get-depth>|<get-depth>(){}[0]
+    abstract val matchType // io.github.jadarma.ahocorasikt/Trie.matchType|{}matchType[0]
+        abstract fun <get-matchType>(): io.github.jadarma.ahocorasikt/MatchType // io.github.jadarma.ahocorasikt/Trie.matchType.<get-matchType>|<get-matchType>(){}[0]
+    abstract val overlap // io.github.jadarma.ahocorasikt/Trie.overlap|{}overlap[0]
+        abstract fun <get-overlap>(): io.github.jadarma.ahocorasikt/Overlap // io.github.jadarma.ahocorasikt/Trie.overlap.<get-overlap>|<get-overlap>(){}[0]
+    abstract val size // io.github.jadarma.ahocorasikt/Trie.size|{}size[0]
+        abstract fun <get-size>(): kotlin/Int // io.github.jadarma.ahocorasikt/Trie.size.<get-size>|<get-size>(){}[0]
+
+    abstract fun search(kotlin/CharSequence, kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin.ranges/IntRange> // io.github.jadarma.ahocorasikt/Trie.search|search(kotlin.CharSequence;kotlin.Boolean){}[0]
+
+    abstract interface Builder { // io.github.jadarma.ahocorasikt/Trie.Builder|null[0]
+        abstract fun add(kotlin/CharSequence): io.github.jadarma.ahocorasikt/Trie.Builder // io.github.jadarma.ahocorasikt/Trie.Builder.add|add(kotlin.CharSequence){}[0]
+        abstract fun build(): io.github.jadarma.ahocorasikt/Trie // io.github.jadarma.ahocorasikt/Trie.Builder.build|build(){}[0]
+        open fun addAll(kotlin.collections/Iterable<kotlin/CharSequence>): io.github.jadarma.ahocorasikt/Trie.Builder // io.github.jadarma.ahocorasikt/Trie.Builder.addAll|addAll(kotlin.collections.Iterable<kotlin.CharSequence>){}[0]
+    }
+
+    final object Companion { // io.github.jadarma.ahocorasikt/Trie.Companion|null[0]
+        final fun builder(io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/Trie.Builder // io.github.jadarma.ahocorasikt/Trie.Companion.builder|builder(io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){}[0]
+    }
+}
+
+final fun (io.github.jadarma.ahocorasikt/Trie).io.github.jadarma.ahocorasikt/contains(kotlin/CharSequence): kotlin/Boolean // io.github.jadarma.ahocorasikt/contains|contains@io.github.jadarma.ahocorasikt.Trie(kotlin.CharSequence){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/contains(io.github.jadarma.ahocorasikt/Trie): kotlin/Boolean // io.github.jadarma.ahocorasikt/contains|contains@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/count(io.github.jadarma.ahocorasikt/Trie): kotlin/Int // io.github.jadarma.ahocorasikt/count|count@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/find(io.github.jadarma.ahocorasikt/Trie): kotlin.sequences/Sequence<kotlin/Pair<kotlin/Int, kotlin/String>> // io.github.jadarma.ahocorasikt/find|find@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findAnyOf(io.github.jadarma.ahocorasikt/Trie, kotlin/Int = ...): kotlin/Pair<kotlin/Int, kotlin/String>? // io.github.jadarma.ahocorasikt/findAnyOf|findAnyOf@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Int){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findFirst(io.github.jadarma.ahocorasikt/Trie): kotlin/String? // io.github.jadarma.ahocorasikt/findFirst|findFirst@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findLast(io.github.jadarma.ahocorasikt/Trie): kotlin/String? // io.github.jadarma.ahocorasikt/findLast|findLast@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findLastAnyOf(io.github.jadarma.ahocorasikt/Trie, kotlin/Int = ...): kotlin/Pair<kotlin/Int, kotlin/String>? // io.github.jadarma.ahocorasikt/findLastAnyOf|findLastAnyOf@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Int){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/indexOfFirst(io.github.jadarma.ahocorasikt/Trie): kotlin/Int // io.github.jadarma.ahocorasikt/indexOfFirst|indexOfFirst@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/indexOfLast(io.github.jadarma.ahocorasikt/Trie): kotlin/Int // io.github.jadarma.ahocorasikt/indexOfLast|indexOfLast@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/reformat(io.github.jadarma.ahocorasikt/Trie, kotlin/Function2<kotlin/String, kotlin/Boolean, kotlin/CharSequence>): kotlin/String // io.github.jadarma.ahocorasikt/reformat|reformat@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function2<kotlin.String,kotlin.Boolean,kotlin.CharSequence>){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/remove(io.github.jadarma.ahocorasikt/Trie): kotlin/String // io.github.jadarma.ahocorasikt/remove|remove@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/replace(io.github.jadarma.ahocorasikt/Trie, kotlin/Function1<kotlin/String, kotlin/CharSequence>): kotlin/String // io.github.jadarma.ahocorasikt/replace|replace@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function1<kotlin.String,kotlin.CharSequence>){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/replace(io.github.jadarma.ahocorasikt/Trie, kotlin/String): kotlin/String // io.github.jadarma.ahocorasikt/replace|replace@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.String){}[0]
+final fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/splitToSequence(io.github.jadarma.ahocorasikt/Trie, kotlin/Int = ...): kotlin.sequences/Sequence<kotlin/String> // io.github.jadarma.ahocorasikt/splitToSequence|splitToSequence@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Int){}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapIndexedNotNull(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function3<kotlin/Int, kotlin/String, #A, #B?>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/mapIndexedNotNull|mapIndexedNotNull@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function3<kotlin.Int,kotlin.String,0:0,0:1?>){0§<kotlin.Any>;1§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/flatMap(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function2<kotlin/String, #A, kotlin.collections/Iterable<#B>>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/flatMap|flatMap@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function2<kotlin.String,0:0,kotlin.collections.Iterable<0:1>>){0§<kotlin.Any>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/flatMapIndexed(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function3<kotlin/Int, kotlin/String, #A, kotlin.collections/Iterable<#B>>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/flatMapIndexed|flatMapIndexed@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function3<kotlin.Int,kotlin.String,0:0,kotlin.collections.Iterable<0:1>>){0§<kotlin.Any>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/map(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function2<kotlin/String, #A, #B>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/map|map@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function2<kotlin.String,0:0,0:1>){0§<kotlin.Any>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapIndexed(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function3<kotlin/Int, kotlin/String, #A, #B>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/mapIndexed|mapIndexed@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function3<kotlin.Int,kotlin.String,0:0,0:1>){0§<kotlin.Any>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any, #B: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapNotNull(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function2<kotlin/String, #A, #B>): kotlin.sequences/Sequence<#B> // io.github.jadarma.ahocorasikt/mapNotNull|mapNotNull@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function2<kotlin.String,0:0,0:1>){0§<kotlin.Any>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/contains(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, #A): kotlin/Boolean // io.github.jadarma.ahocorasikt/contains|contains@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;0:0){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/count(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, #A): kotlin/Int // io.github.jadarma.ahocorasikt/count|count@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;0:0){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findAnyPayloadOf(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Int = ...): kotlin/Triple<kotlin/Int, kotlin/CharSequence, #A>? // io.github.jadarma.ahocorasikt/findAnyPayloadOf|findAnyPayloadOf@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Int){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findFirstPayload(io.github.jadarma.ahocorasikt/PayloadTrie<#A>): #A? // io.github.jadarma.ahocorasikt/findFirstPayload|findFirstPayload@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findLastAnyPayloadOf(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Int = ...): kotlin/Triple<kotlin/Int, kotlin/CharSequence, #A>? // io.github.jadarma.ahocorasikt/findLastAnyPayloadOf|findLastAnyPayloadOf@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Int){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findLastPayload(io.github.jadarma.ahocorasikt/PayloadTrie<#A>): #A? // io.github.jadarma.ahocorasikt/findLastPayload|findLastPayload@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findWithPayload(io.github.jadarma.ahocorasikt/PayloadTrie<#A>): kotlin.sequences/Sequence<kotlin/Triple<kotlin/Int, kotlin/CharSequence, #A>> // io.github.jadarma.ahocorasikt/findWithPayload|findWithPayload@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapIndexedNotNull(io.github.jadarma.ahocorasikt/Trie, kotlin/Function2<kotlin/Int, kotlin/String, #A?>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/mapIndexedNotNull|mapIndexedNotNull@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function2<kotlin.Int,kotlin.String,0:0?>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapNotNull(io.github.jadarma.ahocorasikt/Trie, kotlin/Function1<kotlin/String, #A?>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/mapNotNull|mapNotNull@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function1<kotlin.String,0:0?>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/reformatWithPayload(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function2<kotlin/String, #A?, kotlin/CharSequence>): kotlin/String // io.github.jadarma.ahocorasikt/reformatWithPayload|reformatWithPayload@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function2<kotlin.String,0:0?,kotlin.CharSequence>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/remove(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, #A): kotlin/String // io.github.jadarma.ahocorasikt/remove|remove@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;0:0){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/replace(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, #A, kotlin/String): kotlin/String // io.github.jadarma.ahocorasikt/replace|replace@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;0:0;kotlin.String){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/replace(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Function2<kotlin/String, #A, kotlin/CharSequence>): kotlin/String // io.github.jadarma.ahocorasikt/replace|replace@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Function2<kotlin.String,0:0,kotlin.CharSequence>){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/splitWithPayloadToSequence(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Int = ...): kotlin.sequences/Sequence<kotlin/Pair<kotlin/String, #A?>> // io.github.jadarma.ahocorasikt/splitWithPayloadToSequence|splitWithPayloadToSequence@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Int){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> io.github.jadarma.ahocorasikt/trieOf(kotlin.collections/Map<out kotlin/CharSequence, #A>, io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/PayloadTrie<#A> // io.github.jadarma.ahocorasikt/trieOf|trieOf(kotlin.collections.Map<out|kotlin.CharSequence,0:0>;io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> io.github.jadarma.ahocorasikt/trieOf(kotlin/Array<out kotlin/Pair<out kotlin/CharSequence, out #A>>..., io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/PayloadTrie<#A> // io.github.jadarma.ahocorasikt/trieOf|trieOf(kotlin.Array<out|kotlin.Pair<out|kotlin.CharSequence,out|0:0>>...;io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/flatMap(io.github.jadarma.ahocorasikt/Trie, kotlin/Function1<kotlin/String, kotlin.collections/Iterable<#A>>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/flatMap|flatMap@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function1<kotlin.String,kotlin.collections.Iterable<0:0>>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/flatMapIndexed(io.github.jadarma.ahocorasikt/Trie, kotlin/Function2<kotlin/Int, kotlin/String, kotlin.collections/Iterable<#A>>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/flatMapIndexed|flatMapIndexed@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function2<kotlin.Int,kotlin.String,kotlin.collections.Iterable<0:0>>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/map(io.github.jadarma.ahocorasikt/Trie, kotlin/Function1<kotlin/String, #A>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/map|map@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function1<kotlin.String,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/mapIndexed(io.github.jadarma.ahocorasikt/Trie, kotlin/Function2<kotlin/Int, kotlin/String, #A>): kotlin.sequences/Sequence<#A> // io.github.jadarma.ahocorasikt/mapIndexed|mapIndexed@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Function2<kotlin.Int,kotlin.String,0:0>){0§<kotlin.Any?>}[0]
+final fun io.github.jadarma.ahocorasikt/trieOf(kotlin.collections/Iterable<kotlin/CharSequence>, io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/Trie // io.github.jadarma.ahocorasikt/trieOf|trieOf(kotlin.collections.Iterable<kotlin.CharSequence>;io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){}[0]
+final fun io.github.jadarma.ahocorasikt/trieOf(kotlin/Array<out kotlin/CharSequence>..., io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ...): io.github.jadarma.ahocorasikt/Trie // io.github.jadarma.ahocorasikt/trieOf|trieOf(kotlin.Array<out|kotlin.CharSequence>...;io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap){}[0]
+final inline fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/findRanges(io.github.jadarma.ahocorasikt/Trie): kotlin.sequences/Sequence<kotlin.ranges/IntRange> // io.github.jadarma.ahocorasikt/findRanges|findRanges@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final inline fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/matches(io.github.jadarma.ahocorasikt/Trie): kotlin/Boolean // io.github.jadarma.ahocorasikt/matches|matches@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie){}[0]
+final inline fun (kotlin/CharSequence).io.github.jadarma.ahocorasikt/split(io.github.jadarma.ahocorasikt/Trie, kotlin/Int = ...): kotlin.collections/List<kotlin/String> // io.github.jadarma.ahocorasikt/split|split@kotlin.CharSequence(io.github.jadarma.ahocorasikt.Trie;kotlin.Int){}[0]
+final inline fun <#A: kotlin/Any> (kotlin/CharSequence).io.github.jadarma.ahocorasikt/splitWithPayload(io.github.jadarma.ahocorasikt/PayloadTrie<#A>, kotlin/Int = ...): kotlin.collections/List<kotlin/Pair<kotlin/String, #A?>> // io.github.jadarma.ahocorasikt/splitWithPayload|splitWithPayload@kotlin.CharSequence(io.github.jadarma.ahocorasikt.PayloadTrie<0:0>;kotlin.Int){0§<kotlin.Any>}[0]
+final inline fun <#A: kotlin/Any> io.github.jadarma.ahocorasikt/buildTrie(io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ..., kotlin/Function1<io.github.jadarma.ahocorasikt/PayloadTrie.Builder<#A>, kotlin/Unit>): io.github.jadarma.ahocorasikt/PayloadTrie<#A> // io.github.jadarma.ahocorasikt/buildTrie|buildTrie(io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap;kotlin.Function1<io.github.jadarma.ahocorasikt.PayloadTrie.Builder<0:0>,kotlin.Unit>){0§<kotlin.Any>}[0]
+final inline fun io.github.jadarma.ahocorasikt/buildTrie(io.github.jadarma.ahocorasikt/CaseSensitivity = ..., io.github.jadarma.ahocorasikt/MatchType = ..., io.github.jadarma.ahocorasikt/Overlap = ..., kotlin/Function1<io.github.jadarma.ahocorasikt/Trie.Builder, kotlin/Unit>): io.github.jadarma.ahocorasikt/Trie // io.github.jadarma.ahocorasikt/buildTrie|buildTrie(io.github.jadarma.ahocorasikt.CaseSensitivity;io.github.jadarma.ahocorasikt.MatchType;io.github.jadarma.ahocorasikt.Overlap;kotlin.Function1<io.github.jadarma.ahocorasikt.Trie.Builder,kotlin.Unit>){}[0]

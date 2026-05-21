@@ -1,0 +1,158 @@
+public final class io/github/jadarma/ahocorasikt/BuilderExtKt {
+	public static final fun buildTrie (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;Lkotlin/jvm/functions/Function1;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+	public static final fun buildTrie (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;Lkotlin/jvm/functions/Function1;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static synthetic fun buildTrie$default (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+	public static synthetic fun buildTrie$default (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static final fun trieOf (Ljava/lang/Iterable;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static final fun trieOf (Ljava/util/Map;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+	public static final fun trieOf ([Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static final fun trieOf ([Lkotlin/Pair;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+	public static synthetic fun trieOf$default (Ljava/lang/Iterable;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static synthetic fun trieOf$default (Ljava/util/Map;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+	public static synthetic fun trieOf$default ([Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/Trie;
+	public static synthetic fun trieOf$default ([Lkotlin/Pair;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie;
+}
+
+public final class io/github/jadarma/ahocorasikt/CaseSensitivity : java/lang/Enum {
+	public static final field AsciiInsensitive Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public static final field Insensitive Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public static final field SafeInsensitive Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public static final field Sensitive Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public static fun values ()[Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+}
+
+public final class io/github/jadarma/ahocorasikt/MatchType : java/lang/Enum {
+	public static final field Unrestricted Lio/github/jadarma/ahocorasikt/MatchType;
+	public static final field WhitespaceSeparated Lio/github/jadarma/ahocorasikt/MatchType;
+	public static final field WholeWords Lio/github/jadarma/ahocorasikt/MatchType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/jadarma/ahocorasikt/MatchType;
+	public static fun values ()[Lio/github/jadarma/ahocorasikt/MatchType;
+}
+
+public final class io/github/jadarma/ahocorasikt/Overlap : java/lang/Enum {
+	public static final field Allowed Lio/github/jadarma/ahocorasikt/Overlap;
+	public static final field Leftmost Lio/github/jadarma/ahocorasikt/Overlap;
+	public static final field Longest Lio/github/jadarma/ahocorasikt/Overlap;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/jadarma/ahocorasikt/Overlap;
+	public static fun values ()[Lio/github/jadarma/ahocorasikt/Overlap;
+}
+
+public abstract interface class io/github/jadarma/ahocorasikt/PayloadTrie : io/github/jadarma/ahocorasikt/Trie {
+	public static final field Companion Lio/github/jadarma/ahocorasikt/PayloadTrie$Companion;
+	public abstract fun contains (Ljava/lang/Object;)Z
+	public abstract fun searchWithPayload (Ljava/lang/CharSequence;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun searchWithPayload$default (Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/CharSequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class io/github/jadarma/ahocorasikt/PayloadTrie$Builder {
+	public abstract fun add (Ljava/lang/CharSequence;Ljava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+	public fun addAll (Ljava/lang/Iterable;Ljava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+	public fun addAll (Ljava/util/Map;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+	public abstract fun build ()Lio/github/jadarma/ahocorasikt/PayloadTrie;
+}
+
+public final class io/github/jadarma/ahocorasikt/PayloadTrie$Builder$DefaultImpls {
+	public static fun addAll (Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;Ljava/lang/Iterable;Ljava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+	public static fun addAll (Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;Ljava/util/Map;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+}
+
+public final class io/github/jadarma/ahocorasikt/PayloadTrie$Companion {
+	public final fun builder (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+	public static synthetic fun builder$default (Lio/github/jadarma/ahocorasikt/PayloadTrie$Companion;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/PayloadTrie$Builder;
+}
+
+public final class io/github/jadarma/ahocorasikt/PayloadTrie$DefaultImpls {
+	public static synthetic fun searchWithPayload$default (Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/CharSequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public final class io/github/jadarma/ahocorasikt/StringExtKt {
+	public static final fun contains (Lio/github/jadarma/ahocorasikt/Trie;Ljava/lang/CharSequence;)Z
+	public static final fun contains (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Z
+	public static final fun count (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)I
+	public static final fun find (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Lkotlin/sequences/Sequence;
+	public static final fun findAnyOf (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;I)Lkotlin/Pair;
+	public static synthetic fun findAnyOf$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;IILjava/lang/Object;)Lkotlin/Pair;
+	public static final fun findFirst (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Ljava/lang/String;
+	public static final fun findLast (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Ljava/lang/String;
+	public static final fun findLastAnyOf (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;I)Lkotlin/Pair;
+	public static synthetic fun findLastAnyOf$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;IILjava/lang/Object;)Lkotlin/Pair;
+	public static final fun findRanges (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Lkotlin/sequences/Sequence;
+	public static final fun flatMap (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun flatMapIndexed (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun indexOfFirst (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)I
+	public static final fun indexOfLast (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)I
+	public static final fun map (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun mapIndexed (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun mapIndexedNotNull (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun mapNotNull (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function1;)Lkotlin/sequences/Sequence;
+	public static final fun matches (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Z
+	public static final fun reformat (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
+	public static final fun remove (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;)Ljava/lang/String;
+	public static final fun replace (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Ljava/lang/String;)Ljava/lang/String;
+	public static final fun replace (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+	public static final fun split (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;I)Ljava/util/List;
+	public static synthetic fun split$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;IILjava/lang/Object;)Ljava/util/List;
+	public static final fun splitToSequence (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;I)Lkotlin/sequences/Sequence;
+	public static synthetic fun splitToSequence$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/Trie;IILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public final class io/github/jadarma/ahocorasikt/StringPayloadExtKt {
+	public static final fun contains (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/Object;)Z
+	public static final fun count (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/Object;)I
+	public static final fun findAnyPayloadOf (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;I)Lkotlin/Triple;
+	public static synthetic fun findAnyPayloadOf$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;IILjava/lang/Object;)Lkotlin/Triple;
+	public static final fun findFirstPayload (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;)Ljava/lang/Object;
+	public static final fun findLastAnyPayloadOf (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;I)Lkotlin/Triple;
+	public static synthetic fun findLastAnyPayloadOf$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;IILjava/lang/Object;)Lkotlin/Triple;
+	public static final fun findLastPayload (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;)Ljava/lang/Object;
+	public static final fun findWithPayload (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;)Lkotlin/sequences/Sequence;
+	public static final fun flatMap (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun flatMapIndexed (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function3;)Lkotlin/sequences/Sequence;
+	public static final fun map (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun mapIndexed (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function3;)Lkotlin/sequences/Sequence;
+	public static final fun mapIndexedNotNull (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function3;)Lkotlin/sequences/Sequence;
+	public static final fun mapNotNull (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function2;)Lkotlin/sequences/Sequence;
+	public static final fun reformatWithPayload (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
+	public static final fun remove (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/Object;)Ljava/lang/String;
+	public static final fun replace (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;
+	public static final fun replace (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
+	public static final fun splitWithPayload (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;I)Ljava/util/List;
+	public static synthetic fun splitWithPayload$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;IILjava/lang/Object;)Ljava/util/List;
+	public static final fun splitWithPayloadToSequence (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;I)Lkotlin/sequences/Sequence;
+	public static synthetic fun splitWithPayloadToSequence$default (Ljava/lang/CharSequence;Lio/github/jadarma/ahocorasikt/PayloadTrie;IILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class io/github/jadarma/ahocorasikt/Trie {
+	public static final field Companion Lio/github/jadarma/ahocorasikt/Trie$Companion;
+	public abstract fun getCaseSensitivity ()Lio/github/jadarma/ahocorasikt/CaseSensitivity;
+	public abstract fun getDepth ()I
+	public abstract fun getMatchType ()Lio/github/jadarma/ahocorasikt/MatchType;
+	public abstract fun getOverlap ()Lio/github/jadarma/ahocorasikt/Overlap;
+	public abstract fun getSize ()I
+	public abstract fun search (Ljava/lang/CharSequence;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun search$default (Lio/github/jadarma/ahocorasikt/Trie;Ljava/lang/CharSequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class io/github/jadarma/ahocorasikt/Trie$Builder {
+	public abstract fun add (Ljava/lang/CharSequence;)Lio/github/jadarma/ahocorasikt/Trie$Builder;
+	public fun addAll (Ljava/lang/Iterable;)Lio/github/jadarma/ahocorasikt/Trie$Builder;
+	public abstract fun build ()Lio/github/jadarma/ahocorasikt/Trie;
+}
+
+public final class io/github/jadarma/ahocorasikt/Trie$Builder$DefaultImpls {
+	public static fun addAll (Lio/github/jadarma/ahocorasikt/Trie$Builder;Ljava/lang/Iterable;)Lio/github/jadarma/ahocorasikt/Trie$Builder;
+}
+
+public final class io/github/jadarma/ahocorasikt/Trie$Companion {
+	public final fun builder (Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;)Lio/github/jadarma/ahocorasikt/Trie$Builder;
+	public static synthetic fun builder$default (Lio/github/jadarma/ahocorasikt/Trie$Companion;Lio/github/jadarma/ahocorasikt/CaseSensitivity;Lio/github/jadarma/ahocorasikt/MatchType;Lio/github/jadarma/ahocorasikt/Overlap;ILjava/lang/Object;)Lio/github/jadarma/ahocorasikt/Trie$Builder;
+}
+
+public final class io/github/jadarma/ahocorasikt/Trie$DefaultImpls {
+	public static synthetic fun search$default (Lio/github/jadarma/ahocorasikt/Trie;Ljava/lang/CharSequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+

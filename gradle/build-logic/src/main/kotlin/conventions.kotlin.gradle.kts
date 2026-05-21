@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -31,6 +32,11 @@ kotlin {
         apiVersion = CompileOptions.Kotlin.apiVersion
         allWarningsAsErrors = true
         explicitApi()
+    }
+
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled = true
     }
 
     applyDefaultHierarchyTemplate()
