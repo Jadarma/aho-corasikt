@@ -32,11 +32,12 @@ internal value class CompactTrieNodes(val nodes: Array<CompactTrieNode>) : TrieN
     override fun suffixOf(index: Int): Int = nodes[index].suffixNode
 
     override fun next(index: Int, input: Int): Int {
-        var dest: CompactTrieNode = nodes[index]
-        while (dest.depthAndMatch != 0 && input !in dest) {
-            dest = nodes[dest.failNode]
+        var node = index
+        while(true) {
+            val next = nodes[node].next(input)
+            if(next >= node) return next
+            node = next
         }
-        return dest.next(input)
     }
 
     companion object {
@@ -63,34 +64,19 @@ internal class CompactTrieNode(
     val depth: Int get() = depthAndMatch.absoluteValue
     val isMatch: Boolean get() = depthAndMatch > 0
 
-    operator fun contains(input: Int): Boolean {
-        val bucket = when (input.ushr(6)) {
-            0 -> children0
-            1 -> children1
-            2 -> children2
-            3 -> children3
-            else -> return false
-        }
-        val bucketOffset = 63 - input.rem(64)
-        return bucket.bitAt(bucketOffset)
-    }
-
     fun next(input: Int): Int {
         val bucketIndex = input.ushr(6)
-        val bucket = when (bucketIndex) {
-            0 -> children0
-            1 -> children1
-            2 -> children2
-            3 -> children3
-            else -> return failNode
-        }
-        val bucketOffset = 63 - input.rem(64)
-        if (!bucket.bitAt(bucketOffset)) return failNode
+        if (bucketIndex > 3) return failNode
 
         var offset = childOffset
-        if (bucketIndex > 0) offset += children0.countOneBits()
-        if (bucketIndex > 1) offset += children1.countOneBits()
-        if (bucketIndex > 2) offset += children2.countOneBits()
+        var bucket = children0
+
+        if (bucketIndex > 0) { offset += bucket.countOneBits(); bucket = children1 }
+        if (bucketIndex > 1) { offset += bucket.countOneBits(); bucket = children2 }
+        if (bucketIndex > 2) { offset += bucket.countOneBits(); bucket = children3 }
+
+        val bucketOffset = 63 - input.rem(64)
+        if (!bucket.bitAt(bucketOffset)) return failNode
         if (bucketOffset < 63) offset += (bucket ushr bucketOffset.inc()).countOneBits()
         return offset
     }
