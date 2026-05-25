@@ -6,14 +6,16 @@ import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.asFunction
+import io.github.jadarma.ahocorasikt.internal.util.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.overlap.Overlapper
+import io.github.jadarma.ahocorasikt.internal.util.Remapper
 
 internal open class TrieImpl(
     override val overlap: Overlap,
     override val matchType: MatchType,
     override val caseSensitivity: CaseSensitivity,
+    internal val remapper: Remapper,
     internal val nodes: TrieNodes,
 ) : Trie {
 
@@ -52,7 +54,7 @@ internal open class TrieImpl(
         var index = 0
 
         while (source.hasNext()) {
-            val input = charMapper(source.next()).code
+            val input = remapper[charMapper(source.next()).code]
             current = nodes.next(current, input)
             if (nodes.isMatch(current)) {
                 val range = index - nodes.depthOf(current) + 1..index

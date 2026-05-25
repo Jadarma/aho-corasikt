@@ -7,15 +7,17 @@ import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
+import io.github.jadarma.ahocorasikt.internal.util.Remapper
 
 internal class PayloadTrieImpl<T : Any>(
     overlap: Overlap,
     matchType: MatchType,
     caseSensitivity: CaseSensitivity,
+    remapper: Remapper,
     nodes: TrieNodes,
     private val payloads: ArrayList<T>,
     private val outputs: Map<Int, Int>,
-) : TrieImpl(overlap, matchType, caseSensitivity, nodes), PayloadTrie<T> {
+) : TrieImpl(overlap, matchType, caseSensitivity, remapper, nodes), PayloadTrie<T> {
 
     override fun contains(payload: T): Boolean = false
 

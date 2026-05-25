@@ -3,8 +3,8 @@
 package io.github.jadarma.ahocorasikt.internal.nodes
 
 import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
-import kotlin.jvm.JvmInline
-import kotlin.jvm.JvmStatic
+import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
+import io.github.jadarma.ahocorasikt.internal.util.Remapper
 import kotlin.math.absoluteValue
 
 /**
@@ -32,18 +32,19 @@ internal value class CompactTrieNodes(val nodes: Array<CompactTrieNode>) : TrieN
     override fun suffixOf(index: Int): Int = nodes[index].suffixNode
 
     override fun next(index: Int, input: Int): Int {
+        if (input >= MAX_COMPACT_SIZE) return 0
         var node = index
-        while(true) {
+        while (true) {
             val next = nodes[node].next(input)
-            if(next >= node) return next
+            if (next >= node) return next
             node = next
         }
     }
 
     companion object {
 
-        fun from(nodes: Array<TrieBuilderNode>): CompactTrieNodes {
-            val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it]) }
+        fun from(nodes: Array<TrieBuilderNode>, remapper: Remapper): CompactTrieNodes {
+            val compacted = Array(nodes.size) { CompactTrieNode.from(nodes[it], remapper) }
             return CompactTrieNodes(compacted)
         }
     }
@@ -66,7 +67,6 @@ internal class CompactTrieNode(
 
     fun next(input: Int): Int {
         val bucketIndex = input.ushr(6)
-        if (bucketIndex > 3) return failNode
 
         var offset = childOffset
         var bucket = children0
@@ -89,12 +89,12 @@ internal class CompactTrieNode(
          */
         const val MAX_COMPACT_SIZE = 256
 
-        fun from(node: TrieBuilderNode, remap: Map<Int, Int>? = null): CompactTrieNode {
+        fun from(node: TrieBuilderNode, remap: Remapper): CompactTrieNode {
             require(node.children.size <= MAX_COMPACT_SIZE) { "Cannot compact node. It has too many children." }
 
             val children = LongArray(4).apply {
                 for (via in node.children.keys) {
-                    val input = remap?.getValue(via) ?: via
+                    val input = remap.getValue(via)
                     val bucket = input.ushr(6)
                     val bucketOffset = 63 - input.rem(64)
                     this[bucket] = this[bucket].setBit(bucketOffset)

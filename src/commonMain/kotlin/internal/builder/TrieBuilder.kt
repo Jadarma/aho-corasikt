@@ -7,14 +7,16 @@ import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.asFunction
+import io.github.jadarma.ahocorasikt.internal.util.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
-import io.github.jadarma.ahocorasikt.internal.nodes.RemappedCompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.trie.PayloadTrieImpl
 import io.github.jadarma.ahocorasikt.internal.trie.TrieImpl
+import io.github.jadarma.ahocorasikt.internal.util.MapRemapper
+import io.github.jadarma.ahocorasikt.internal.util.NoopRemapper
+import io.github.jadarma.ahocorasikt.internal.util.Remapper
 import kotlin.collections.set
 
 internal sealed class TrieBuilderBase<T: Any>(
@@ -58,7 +60,7 @@ internal sealed class TrieBuilderBase<T: Any>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    protected fun buildInternal(): TrieNodes {
+    protected fun buildInternal(): Pair<TrieNodes, Remapper> {
         check(!built) { "TrieBuilder already consumed." }
         require(size > 1) { "No keywords added, nothing to build." }
         built = true
@@ -94,7 +96,7 @@ internal sealed class TrieBuilderBase<T: Any>(
     }
 
     @Suppress("CyclomaticComplexMethod")
-    private fun optimize(original: Array<TrieBuilderNode>): TrieNodes {
+    private fun optimize(original: Array<TrieBuilderNode>): Pair<TrieNodes, Remapper> {
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
         val needsRemapping = alphabet.max() > MAX_COMPACT_SIZE
 
@@ -106,16 +108,12 @@ internal sealed class TrieBuilderBase<T: Any>(
         }
 
         val optLevel = minOf(possibleOptimizationLevel, optimizationLevel)
-
-        val remapping = alphabet
-            .takeIf { optLevel == 1 }.orEmpty()
-            .sorted().withIndex()
-            .associate { it.value to it.index }
+        val remapper = if(needsRemapping || optLevel == 2) MapRemapper(alphabet) else NoopRemapper
 
         return when (optLevel) {
-            0 -> DefaultTrieNodes.from(original)
-            1 -> RemappedCompactTrieNodes.from(original, remapping)
-            2 -> CompactTrieNodes.from(original)
+            0 -> DefaultTrieNodes.from(original) to NoopRemapper
+            1 -> CompactTrieNodes.from(original, remapper) to remapper
+            2 -> CompactTrieNodes.from(original, NoopRemapper) to NoopRemapper
             else -> error("Invalid optimization setting.")
         }
     }
@@ -130,8 +128,8 @@ internal class TrieBuilder(
     override fun add(word: CharSequence): Trie.Builder = apply { addInternal(word, null) }
 
     override fun build(): Trie {
-        val nodes = buildInternal()
-        return TrieImpl(overlap, matchType, caseSensitivity, nodes)
+        val (nodes, remapper) = buildInternal()
+        return TrieImpl(overlap, matchType, caseSensitivity, remapper, nodes)
     }
 }
 
@@ -145,11 +143,12 @@ internal class PayloadTrieBuilder<T : Any>(
         apply { addInternal(word, payload) }
 
     override fun build(): PayloadTrie<T> {
-        val nodes = buildInternal()
+        val (nodes, remapper) = buildInternal()
         return PayloadTrieImpl(
             overlap = overlap,
             matchType = matchType,
             caseSensitivity = caseSensitivity,
+            remapper = remapper,
             nodes = nodes,
             payloads = ArrayList<T>(outputs.size).apply { addAll(payloads.keys) },
             outputs = outputs

@@ -1,9 +1,10 @@
-package io.github.jadarma.ahocorasikt.internal
+package io.github.jadarma.ahocorasikt.internal.util
 
 import io.github.jadarma.ahocorasikt.CaseSensitivity
 import io.github.jadarma.ahocorasikt.CaseSensitivity.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import kotlin.text.iterator
 
 class TextUtilTest : FunSpec({
 
