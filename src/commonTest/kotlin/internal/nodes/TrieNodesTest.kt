@@ -124,29 +124,42 @@ class TrieNodesTest : FunSpec({
     }
 
     test("DefaultNodes") {
-        val trie = trieByLevel(0)
-        (trie as TrieImpl).should {
+        (trieByLevel(0) as TrieImpl).should {
             it.remapper.shouldBeInstanceOf<NoopRemapper>()
             it.nodes.shouldBeInstanceOf<DefaultTrieNodes>().shouldBeWiredCorrectly(it.remapper)
+            it.shouldMatchExactly(text, expectedMatches)
         }
-        trie.shouldMatchExactly(text, expectedMatches)
     }
 
-    test("RemappedNodes") {
-        val trie = trieByLevel(2)
-        (trie as TrieImpl).should {
+    test("CompactRemappedNodes") {
+        (trieByLevel(1) as TrieImpl).should {
             it.remapper.shouldBeInstanceOf<MapRemapper>()
             it.nodes.shouldBeInstanceOf<CompactTrieNodes>().shouldBeWiredCorrectly(it.remapper)
+            it.shouldMatchExactly(text, expectedMatches)
         }
-        trie.shouldMatchExactly(text, expectedMatches)
     }
 
     test("CompactNodes") {
-        val trie = trieByLevel(3)
-        (trie as TrieImpl).should {
+        (trieByLevel(2) as TrieImpl).should {
             it.remapper.shouldBeInstanceOf<NoopRemapper>()
             it.nodes.shouldBeInstanceOf<CompactTrieNodes>().shouldBeWiredCorrectly(it.remapper)
+            it.shouldMatchExactly(text, expectedMatches)
         }
-        trie.shouldMatchExactly(text, expectedMatches)
+    }
+
+    test("OptimizedRemappedNodes") {
+        (trieByLevel(3) as TrieImpl).should {
+            it.remapper.shouldBeInstanceOf<MapRemapper>()
+            it.nodes.shouldBeInstanceOf<OptimizedTrieNodes>().shouldBeWiredCorrectly(it.remapper)
+            it.shouldMatchExactly(text, expectedMatches)
+        }
+    }
+
+    test("OptimizedNodes") {
+        (trieByLevel(4) as TrieImpl).should {
+            it.remapper.shouldBeInstanceOf<NoopRemapper>()
+            it.nodes.shouldBeInstanceOf<OptimizedTrieNodes>().shouldBeWiredCorrectly(it.remapper)
+            it.shouldMatchExactly(text, expectedMatches)
+        }
     }
 })

@@ -7,19 +7,19 @@ import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.PayloadTrie
 import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.internal.util.asFunction
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.DefaultTrieNodes
+import io.github.jadarma.ahocorasikt.internal.nodes.OptimizedTrieNodes
 import io.github.jadarma.ahocorasikt.internal.nodes.TrieNodes
 import io.github.jadarma.ahocorasikt.internal.trie.PayloadTrieImpl
 import io.github.jadarma.ahocorasikt.internal.trie.TrieImpl
 import io.github.jadarma.ahocorasikt.internal.util.MapRemapper
 import io.github.jadarma.ahocorasikt.internal.util.NoopRemapper
 import io.github.jadarma.ahocorasikt.internal.util.Remapper
-import kotlin.collections.set
+import io.github.jadarma.ahocorasikt.internal.util.asFunction
 
-internal sealed class TrieBuilderBase<T: Any>(
+internal sealed class TrieBuilderBase<T : Any>(
     val caseSensitivity: CaseSensitivity,
     val matchType: MatchType,
     val overlap: Overlap,
@@ -43,7 +43,7 @@ internal sealed class TrieBuilderBase<T: Any>(
         check(!built) { "TrieBuilder already consumed." }
         require(word.isNotEmpty()) { "Word cannot be empty." }
 
-        if(payload != null && payload !in payloads) {
+        if (payload != null && payload !in payloads) {
             payloads[payload] = payloads.size
         }
 
@@ -79,12 +79,12 @@ internal sealed class TrieBuilderBase<T: Any>(
             }
         }
 
-        while(head < nodes.size) {
+        while (head < nodes.size) {
             val node = nodes[head++]!!
-            if(node.payload != null) {
+            if (node.payload != null) {
                 outputs[node.index] = payloads.getValue(node.payload as T)
             }
-            for((input, child) in node.children.entries.sortedBy { it.key }) {
+            for ((input, child) in node.children.entries.sortedBy { it.key }) {
                 child.index = tail
                 child.compute(via = input)
                 nodes[tail++] = child
@@ -95,27 +95,45 @@ internal sealed class TrieBuilderBase<T: Any>(
         return optimize(nodes as Array<TrieBuilderNode>)
     }
 
-    @Suppress("CyclomaticComplexMethod")
+    @Suppress("CyclomaticComplexMethod", "MagicNumber")
     private fun optimize(original: Array<TrieBuilderNode>): Pair<TrieNodes, Remapper> {
+        val needsRemapping = alphabet.max() >= MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
-        val needsRemapping = alphabet.max() > MAX_COMPACT_SIZE
+
+        val worthCompacting = canCompact && run {
+            val isLarge = original.size > 256_000
+            val totalTransitions = original.sumOf { it.children.size.toLong() }
+            val estimatedOptimizedSize = (totalTransitions * 2L * 1.2).toLong()
+            val estimatedCompactSize = original.size * 4L
+            val wouldSaveMemory = estimatedCompactSize < estimatedOptimizedSize
+            isLarge || wouldSaveMemory
+        }
 
         val possibleOptimizationLevel = when {
-            !canCompact -> 0
-            needsRemapping -> 1
+            !worthCompacting && !needsRemapping -> 4
+            !worthCompacting && needsRemapping -> 3
             !needsRemapping -> 2
+            needsRemapping -> 1
             else -> 0
         }
 
-        val optLevel = minOf(possibleOptimizationLevel, optimizationLevel)
-        val remapper = if(needsRemapping || optLevel == 2) MapRemapper(alphabet) else NoopRemapper
-
-        return when (optLevel) {
-            0 -> DefaultTrieNodes.from(original) to NoopRemapper
-            1 -> CompactTrieNodes.from(original, remapper) to remapper
-            2 -> CompactTrieNodes.from(original, NoopRemapper) to NoopRemapper
+        val optLevel = when (optimizationLevel) {
+            0, 1, 2, 3, 4 -> optimizationLevel
+            Int.MAX_VALUE -> possibleOptimizationLevel
             else -> error("Invalid optimization setting.")
         }
+        check(optLevel !in 1..2 || canCompact) { "Trie not compatible with chosen optimization." }
+
+        val remapper = if (optLevel == 1 || optLevel == 3) MapRemapper(alphabet) else NoopRemapper
+        val nodes = when (optLevel) {
+            0 -> DefaultTrieNodes.from(original)
+            1 -> CompactTrieNodes.from(original, remapper)
+            2 -> CompactTrieNodes.from(original, NoopRemapper)
+            3 -> OptimizedTrieNodes.from(original, remapper)
+            4 -> OptimizedTrieNodes.from(original, NoopRemapper)
+            else -> error("Invalid optimization setting.")
+        }
+        return nodes to remapper
     }
 }
 

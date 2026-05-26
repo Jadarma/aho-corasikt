@@ -7,6 +7,7 @@ import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
 import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Overlap.Allowed
 import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.buildTrie
 import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderBase
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.kotest.assertions.withClue
@@ -92,20 +93,20 @@ fun Trie.Companion.ofVariants(
     val alphabet = mutableSetOf<Char>()
     for (word in keywords) alphabet += word.toSet()
     val canCompact = alphabet.size <= MAX_COMPACT_SIZE
-    val needsRemapping = alphabet.maxOf(Char::code) >= MAX_COMPACT_SIZE
+    val needsRemapping = alphabet.max().code >= MAX_COMPACT_SIZE
 
-    fun buildWithLevel(level: Int): Trie = Trie
-        .builder(caseSensitivity, matchType, overlap)
-        .addAll(keywords)
-        .apply { (this as TrieBuilderBase<*>).optimizationLevel = level }
-        .build()
+    fun buildWithLevel(level: Int): Trie = buildTrie(caseSensitivity, matchType, overlap) {
+        addAll(keywords)
+        (this as TrieBuilderBase<*>).optimizationLevel = level
+    }
 
     val default = buildWithLevel(0)
     val variants = buildMap {
-        if (canCompact && needsRemapping) put("Remapped", buildWithLevel(1))
-        if (canCompact && !needsRemapping) put("Compact", buildWithLevel(2))
+        if(canCompact) put("CompactRemapped", buildWithLevel(1))
+        if(canCompact && !needsRemapping) put("Compact", buildWithLevel(2))
+        put("OptimizedRemapped", buildWithLevel(3))
+        put("Optimized", buildWithLevel(4))
     }
 
-    return if(variants.isEmpty()) default
-    else VariantTrie(default, variants)
+    return VariantTrie(default, variants)
 }
