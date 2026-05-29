@@ -2,7 +2,6 @@ package io.github.jadarma.ahocorasikt
 
 import io.github.jadarma.ahocorasikt.test.ofVariants
 import io.github.jadarma.ahocorasikt.test.shouldMatchExactly
-import io.github.jadarma.ahocorasikt.test.shouldMatchExactlyIgnoringOverlaps
 import io.kotest.core.spec.style.FunSpec
 
 class OverlapTest : FunSpec({
@@ -52,7 +51,7 @@ class OverlapTest : FunSpec({
             allowed.shouldMatchExactly(text, withOverlaps)
         }
         test("Falls back to leftmost when required no overlaps.") {
-            allowed.shouldMatchExactlyIgnoringOverlaps(text, withLeftmost)
+            allowed.shouldMatchExactly(text, withLeftmost, requireNoOverlaps = true)
         }
     }
 
@@ -62,7 +61,7 @@ class OverlapTest : FunSpec({
             ignored.shouldMatchExactly(text, withLeftmost)
         }
         test("Is unaffected by no overlaps request, it is the same strategy") {
-            ignored.shouldMatchExactlyIgnoringOverlaps(text, withLeftmost)
+            ignored.shouldMatchExactly(text, withLeftmost, requireNoOverlaps = true)
         }
     }
 
@@ -72,7 +71,7 @@ class OverlapTest : FunSpec({
             ignored.shouldMatchExactly(text, withLongest)
         }
         test("Is unaffected by no overlaps request, it already avoids overlaps") {
-            ignored.shouldMatchExactlyIgnoringOverlaps(text, withLongest)
+            ignored.shouldMatchExactly(text, withLongest, requireNoOverlaps = true)
         }
     }
 })

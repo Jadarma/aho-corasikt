@@ -25,10 +25,16 @@ internal sealed class TrieBuilderBase<T : Any>(
     val overlap: Overlap,
 ) {
 
-    private var built = false
+    /** Maps to the internal nodes representations. */
+    enum class TrieVariant { Unoptimized, Compact, Optimized; }
 
-    /** Internal flag used only for testing. All production Tries are optimized. */
-    internal var optimizationLevel: Int = Int.MAX_VALUE
+    /**
+     * Internal option to force building a specific trie variant.
+     * Always `null` in production, which means heuristics will be used to decide the best fit.
+     */
+    internal var forceVariant: TrieVariant? = null
+
+    private var built = false
 
     private val root = TrieBuilderNode(null, null)
     private var size = 1
@@ -97,8 +103,10 @@ internal sealed class TrieBuilderBase<T : Any>(
 
     @Suppress("CyclomaticComplexMethod", "MagicNumber")
     private fun optimize(original: Array<TrieBuilderNode>): Pair<TrieNodes, Remapper> {
-        val needsRemapping = alphabet.max() >= MAX_COMPACT_SIZE
         val canCompact = alphabet.size <= MAX_COMPACT_SIZE
+        require(canCompact || forceVariant != TrieVariant.Compact) {
+            "Cannot compact this trie because it has too many values in alphabet."
+        }
 
         val worthCompacting = canCompact && run {
             val isLarge = original.size > 256_000
@@ -109,30 +117,22 @@ internal sealed class TrieBuilderBase<T : Any>(
             isLarge || wouldSaveMemory
         }
 
-        val possibleOptimizationLevel = when {
-            !worthCompacting && !needsRemapping -> 4
-            !worthCompacting && needsRemapping -> 3
-            !needsRemapping -> 2
-            needsRemapping -> 1
-            else -> 0
+        val optLevel = forceVariant ?: when {
+            !worthCompacting -> TrieVariant.Optimized
+            worthCompacting -> TrieVariant.Compact
+            else -> TrieVariant.Unoptimized
         }
 
-        val optLevel = when (optimizationLevel) {
-            0, 1, 2, 3, 4 -> optimizationLevel
-            Int.MAX_VALUE -> possibleOptimizationLevel
-            else -> error("Invalid optimization setting.")
-        }
-        check(optLevel !in 1..2 || canCompact) { "Trie not compatible with chosen optimization." }
+        val remapper =
+            if (optLevel != TrieVariant.Unoptimized && alphabet.max() >= MAX_COMPACT_SIZE) MapRemapper(alphabet)
+            else NoopRemapper
 
-        val remapper = if (optLevel == 1 || optLevel == 3) MapRemapper(alphabet) else NoopRemapper
         val nodes = when (optLevel) {
-            0 -> DefaultTrieNodes.from(original)
-            1 -> CompactTrieNodes.from(original, remapper)
-            2 -> CompactTrieNodes.from(original, NoopRemapper)
-            3 -> OptimizedTrieNodes.from(original, remapper)
-            4 -> OptimizedTrieNodes.from(original, NoopRemapper)
-            else -> error("Invalid optimization setting.")
+            TrieVariant.Unoptimized -> DefaultTrieNodes.from(original)
+            TrieVariant.Compact -> CompactTrieNodes.from(original, remapper)
+            TrieVariant.Optimized -> OptimizedTrieNodes.from(original, remapper)
         }
+
         return nodes to remapper
     }
 }
@@ -169,7 +169,7 @@ internal class PayloadTrieBuilder<T : Any>(
             remapper = remapper,
             nodes = nodes,
             payloads = ArrayList<T>(outputs.size).apply { addAll(payloads.keys) },
-            outputs = outputs
+            outputs = outputs,
         )
     }
 }

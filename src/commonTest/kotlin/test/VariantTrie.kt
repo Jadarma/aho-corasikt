@@ -1,80 +1,114 @@
 package io.github.jadarma.ahocorasikt.test
 
-import io.github.jadarma.ahocorasikt.CaseSensitivity
+import io.github.jadarma.ahocorasikt.*
 import io.github.jadarma.ahocorasikt.CaseSensitivity.Sensitive
-import io.github.jadarma.ahocorasikt.MatchType
 import io.github.jadarma.ahocorasikt.MatchType.Unrestricted
-import io.github.jadarma.ahocorasikt.Overlap
 import io.github.jadarma.ahocorasikt.Overlap.Allowed
-import io.github.jadarma.ahocorasikt.Trie
-import io.github.jadarma.ahocorasikt.buildTrie
 import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderBase
+import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderBase.TrieVariant
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
+import io.kotest.assertions.fail
 import io.kotest.assertions.withClue
-import io.kotest.inspectors.forAll
 import io.kotest.inspectors.forAllKeys
 import io.kotest.matchers.shouldBe
 
 /**
  * Used for testing to ensure the optimization methods hold.
- * It implements the [Trie] interface and ensures that all [optimizedVariants] produce the exact same output as
- * the [default] one.
+ * It implements the [Trie] interface and ensures that all variants produce the exact same output.
  * Use [Trie.Companion.ofVariants] to construct a variant Trie for any inputs.
  *
- * @param default           The reference implementation, assumed correct.
- * @param optimizedVariants Variations of the same trie build with different optimizations.
+ * @param variants Variations of the same trie build with different optimizations.
+ *                 It must contain an [TrieVariant.Unoptimized] variant, used as a reference.
  */
-class VariantTrie(
-    private val default: Trie,
-    private val optimizedVariants: Map<String, Trie>,
-) : Trie {
+internal class VariantTrie private constructor(val variants: Map<TrieVariant, Trie>) : Trie {
+
+    val reference: Trie
 
     init {
-        require(optimizedVariants.isNotEmpty()) { "Don't use a VariantTrie without any variants."}
-
-        withClue("Optimised variant(s) must use the same settings.") {
-            optimizedVariants.values.apply {
-                forAll { it.caseSensitivity shouldBe default.caseSensitivity }
-                forAll { it.matchType shouldBe default.matchType }
-                forAll { it.overlap shouldBe default.overlap }
-                forAll { it.size shouldBe default.size }
-                forAll { it.depth shouldBe default.depth }
+        require(variants.isNotEmpty()) { "Don't use a VariantTrie without any variants." }
+        require(TrieVariant.Unoptimized in variants) { "Unoptimized variants are not supported." }
+        reference = variants.getValue(TrieVariant.Unoptimized)
+        withClue("All variants must use the same settings.") {
+            variants.forAllKeys { variant ->
+                val trie = variants.getValue(variant)
+                trie.caseSensitivity shouldBe reference.caseSensitivity
+                trie.matchType shouldBe reference.matchType
+                trie.overlap shouldBe reference.overlap
+                trie.size shouldBe reference.size
+                trie.depth shouldBe reference.depth
             }
         }
     }
 
-    override val caseSensitivity: CaseSensitivity get() = default.caseSensitivity
-    override val matchType: MatchType get() = default.matchType
-    override val overlap: Overlap get() = default.overlap
-    override val depth: Int get() = default.depth
-    override val size: Int get() = default.size
+    override val caseSensitivity: CaseSensitivity get() = reference.caseSensitivity
+    override val matchType: MatchType get() = reference.matchType
+    override val overlap: Overlap get() = reference.overlap
+    override val depth: Int get() = reference.depth
+    override val size: Int get() = reference.size
 
     override fun search(
         text: CharSequence,
         requireNoOverlaps: Boolean
-    ): Sequence<IntRange> {
-        return sequence {
-            val defaultIter = default.search(text, requireNoOverlaps).iterator()
-            val optimizedIters = optimizedVariants.mapValues { it.value.search(text, requireNoOverlaps).iterator() }
+    ): Sequence<IntRange> = sequence {
+        val defaultIter = reference.search(text, requireNoOverlaps).iterator()
+        val variantIter = variants
+            .filterValues { it !== reference }
+            .mapValues { it.value.search(text, requireNoOverlaps).iterator() }
 
-            while (true) {
-                val defaultHasNext = defaultIter.hasNext()
-                optimizedIters.forAllKeys { variant ->
-                    withClue("The $variant variant doesn't have the same match count as default implementation.") {
-                        optimizedIters.getValue(variant).hasNext() shouldBe defaultHasNext
+        var matchIndex = 0
+        while (defaultIter.hasNext()) {
+            withClue({ "Match #${matchIndex++}:" }) {
+                val expectedMatch = defaultIter.next()
+                variantIter.forAllKeys { variant ->
+                    val iter = variantIter.getValue(variant)
+                    if (!iter.hasNext()) {
+                        fail("Expected to find $expectedMatch, but trie stopped.")
+                    }
+                    withClue({ "Trie match not the next expected." }) {
+                        iter.next() shouldBe expectedMatch
                     }
                 }
-
-                if (!defaultHasNext) break
-                val defaultNext = defaultIter.next()
-                optimizedIters.forAllKeys { variant ->
-                    withClue("The $variant variant did not produce the same next match as default implementation.") {
-                        optimizedIters.getValue(variant).next() shouldBe defaultNext
-                    }
-                }
-
-                yield(defaultNext)
+                yield(expectedMatch)
             }
+        }
+        variantIter.forAllKeys { variant ->
+            val iter = variantIter.getValue(variant)
+            if (iter.hasNext()) {
+                fail("This variant found extra matches, first being ${iter.next()}")
+            }
+        }
+    }
+
+    companion object {
+
+        fun of(
+            keywords: Collection<CharSequence>,
+            caseSensitivity: CaseSensitivity = Sensitive,
+            matchType: MatchType = Unrestricted,
+            overlap: Overlap = Allowed,
+        ): Trie =
+            possibleVariants(keywords)
+                .associateWith { variant -> buildVariant(variant, keywords, caseSensitivity, matchType, overlap) }
+                .let(::VariantTrie)
+
+        fun buildVariant(
+            variant: TrieVariant,
+            keywords: Collection<CharSequence>,
+            caseSensitivity: CaseSensitivity = Sensitive,
+            matchType: MatchType = Unrestricted,
+            overlap: Overlap = Allowed,
+        ): Trie = buildTrie(caseSensitivity, matchType, overlap) {
+            (this as TrieBuilderBase<*>).forceVariant = variant
+            addAll(keywords)
+        }
+
+        /** For a set of keywords, determine possible optimization variants for a trie. */
+        private fun possibleVariants(keywords: Collection<CharSequence>): Set<TrieVariant> = buildSet {
+            val alphabet = buildSet(capacity = 1024) { for (word in keywords) addAll(word.asIterable()) }
+            val canCompact = alphabet.size <= MAX_COMPACT_SIZE
+
+            addAll(TrieVariant.entries)
+            if (!canCompact) remove(TrieVariant.Compact)
         }
     }
 }
@@ -89,24 +123,4 @@ fun Trie.Companion.ofVariants(
     caseSensitivity: CaseSensitivity = Sensitive,
     matchType: MatchType = Unrestricted,
     overlap: Overlap = Allowed,
-): Trie {
-    val alphabet = mutableSetOf<Char>()
-    for (word in keywords) alphabet += word.toSet()
-    val canCompact = alphabet.size <= MAX_COMPACT_SIZE
-    val needsRemapping = alphabet.max().code >= MAX_COMPACT_SIZE
-
-    fun buildWithLevel(level: Int): Trie = buildTrie(caseSensitivity, matchType, overlap) {
-        addAll(keywords)
-        (this as TrieBuilderBase<*>).optimizationLevel = level
-    }
-
-    val default = buildWithLevel(0)
-    val variants = buildMap {
-        if(canCompact) put("CompactRemapped", buildWithLevel(1))
-        if(canCompact && !needsRemapping) put("Compact", buildWithLevel(2))
-        put("OptimizedRemapped", buildWithLevel(3))
-        put("Optimized", buildWithLevel(4))
-    }
-
-    return VariantTrie(default, variants)
-}
+): Trie = VariantTrie.of(keywords, caseSensitivity, matchType, overlap)

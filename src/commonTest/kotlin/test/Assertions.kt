@@ -7,30 +7,15 @@ import io.kotest.inspectors.shouldForAll
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.ranges.shouldBeWithin
 import io.kotest.matchers.shouldBe
-import kotlin.text.slice
 
 /** Assert that this trie can search the [text] for exactly the [expected] matches, in that order. */
 fun Trie.shouldMatchExactly(
     text: CharSequence,
-    expected: Iterable<Pair<IntRange, String>>,
-) = shouldMatchExactlyInternal(text, requireNoOverlaps = false, expected)
-
-/**
- * Assert that this trie can search the [text] for exactly the [expected] matches, in that order, while it was asked
- * to ensure no overlaps.
- */
-fun Trie.shouldMatchExactlyIgnoringOverlaps(
-    text: CharSequence,
-    expected: Iterable<Pair<IntRange, String>>,
-) = shouldMatchExactlyInternal(text, requireNoOverlaps = true, expected)
-
-private fun Trie.shouldMatchExactlyInternal(
-    text: CharSequence,
-    requireNoOverlaps: Boolean,
-    expected: Iterable<Pair<IntRange, String>>,
+    expected: Iterable<Pair<IntRange, CharSequence>>,
+    requireNoOverlaps: Boolean = false,
 ) {
     val expectedMatches = expected.map { (range, slice) ->
-        withClue({ "The expected range $range is invalid or does not match text. Bad test declaration?"}) {
+        withClue({ "The expected range $range is invalid or does not match text. Bad test declaration?" }) {
             (range as ClosedRange<Int>).shouldBeWithin(text.indices as ClosedRange<Int>)
             text.slice(range) shouldBe slice
         }
@@ -39,7 +24,7 @@ private fun Trie.shouldMatchExactlyInternal(
 
     val actualMatches = shouldNotThrowAny { search(text, requireNoOverlaps).toList() }
 
-    withClue("Some matches were out of bounds of text indices.") {
+    withClue({"Some matches were out of bounds of text indices."}) {
         actualMatches.shouldForAll { (it as ClosedRange<Int>).shouldBeWithin(text.indices as ClosedRange<Int>) }
     }
 
