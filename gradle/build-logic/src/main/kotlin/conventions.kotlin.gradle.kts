@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
@@ -21,6 +22,17 @@ kotlin {
     watchosArm64()
     watchosDeviceArm64()
     watchosSimulatorArm64()
+
+    // Web
+    js {
+        nodejs()
+        browser { testTask { useKarma { useFirefoxHeadless() } } }
+    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        nodejs()
+        browser { testTask { useKarma { useFirefoxHeadless() } } }
+    }
 
     jvmToolchain {
         languageVersion = CompileOptions.Java.languageVersion
