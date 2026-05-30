@@ -1,7 +1,7 @@
 package io.github.jadarma.ahocorasikt.benchmark.building
 
 import com.goncalossilva.resources.Resource
-import io.github.jadarma.ahocorasikt.buildTrie
+import io.github.jadarma.ahocorasikt.trieOf
 import kotlinx.benchmark.*
 
 @BenchmarkMode(Mode.AverageTime)
@@ -26,5 +26,5 @@ open class LoremBuilding {
     }
 
     @Benchmark
-    fun build(): Any = buildTrie { addAll(words!!) }
+    fun build() = trieOf(words!!)
 }

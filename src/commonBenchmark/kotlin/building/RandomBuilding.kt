@@ -1,6 +1,6 @@
 package io.github.jadarma.ahocorasikt.benchmark.building
 
-import io.github.jadarma.ahocorasikt.Trie
+import io.github.jadarma.ahocorasikt.trieOf
 import kotlinx.benchmark.*
 import kotlin.random.Random
 
@@ -9,7 +9,7 @@ import kotlin.random.Random
 @State(Scope.Benchmark)
 open class RandomBuilding {
 
-    @Param("10", "100", "1000", "10000", "100000")
+    @Param("100", "10000", "100000")
     var patterns = 0
 
     private val ascii = ArrayList<CharSequence>()
@@ -58,17 +58,11 @@ open class RandomBuilding {
     }
 
     @Benchmark
-    fun asciiWords(): Trie {
-        return Trie.builder().addAll(ascii).build()
-    }
+    fun asciiWords() = trieOf(ascii)
 
     @Benchmark
-    fun unicodeWords(): Trie {
-        return Trie.builder().addAll(unicode).build()
-    }
+    fun unicodeWords() = trieOf(unicode)
 
     @Benchmark
-    fun hashLike(): Trie {
-        return Trie.builder().addAll(hashes).build()
-    }
+    fun hashLike() = trieOf(hashes)
 }

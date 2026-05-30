@@ -61,17 +61,17 @@ open class UnicodeSearch {
     }
 
     @Benchmark
-    fun defaultSearch(): Int = defaultTrie!!.search(text!!).count()
+    fun defaultSearch() = defaultTrie!!.search(text!!).count()
 
     @Benchmark
-    fun insensitiveSearch(): Int = insensitiveTrie!!.search(text!!).count()
+    fun insensitiveSearch() = insensitiveTrie!!.search(text!!).count()
 
     @Benchmark
-    fun wholeWordSearch(): Int = wholeWordTrie!!.search(text!!).count()
+    fun wholeWordSearch() = wholeWordTrie!!.search(text!!).count()
 
     @Benchmark
-    fun noOverlapSearch(): Int = noOverlapTrie!!.search(text!!).count()
+    fun noOverlapSearch() = noOverlapTrie!!.search(text!!).count()
 
     @Benchmark
-    fun fullOptionSearch(): Int = fullOptionTrie!!.search(text!!).count()
+    fun fullOptionSearch() = fullOptionTrie!!.search(text!!).count()
 }
