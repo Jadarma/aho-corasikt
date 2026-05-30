@@ -5,6 +5,8 @@ package io.github.jadarma.ahocorasikt.internal.nodes
 import io.github.jadarma.ahocorasikt.internal.builder.TrieBuilderNode
 import io.github.jadarma.ahocorasikt.internal.nodes.CompactTrieNode.Companion.MAX_COMPACT_SIZE
 import io.github.jadarma.ahocorasikt.internal.util.Remapper
+import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmStatic
 import kotlin.math.absoluteValue
 
 /**

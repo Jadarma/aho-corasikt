@@ -2,6 +2,8 @@
 // This code is licensed under the Apache 2.0 license, see LICENSE.md or https://www.apache.org/licenses/LICENSE-2.0.
 package io.github.jadarma.ahocorasikt.internal.util
 
+import kotlin.jvm.JvmInline
+
 /**
  * A remapper is used to convert the actual input value into the dense representation.
  * For example, instead of `'a' = 97, 'c' = 99`, it would be `'a'=0, 'c'=1`.

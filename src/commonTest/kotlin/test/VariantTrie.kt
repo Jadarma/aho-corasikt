@@ -17,7 +17,7 @@ import io.kotest.matchers.shouldBe
  * It implements the [Trie] interface and ensures that all variants produce the exact same output.
  * Use [Trie.Companion.ofVariants] to construct a variant Trie for any inputs.
  *
- * @param variants Variations of the same trie build with different optimizations.
+ * @property variants Variations of the same trie build with different optimizations.
  *                 It must contain an [TrieVariant.Unoptimized] variant, used as a reference.
  */
 internal class VariantTrie private constructor(val variants: Map<TrieVariant, Trie>) : Trie {
