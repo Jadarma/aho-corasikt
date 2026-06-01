@@ -12,8 +12,8 @@ object CompileOptions {
     object Package {
         const val GROUP_ID: String = "io.github.jadarma.ahocorasikt"
         const val ARTIFACT_ID: String = "aho-corasikt"
-        const val CURRENT: String = "0.0.0" // Last released version.
-        const val NEXT: String = "0.1.0" // Current snapshot.
+        const val CURRENT: String = "0.1.0" // Last released version.
+        const val NEXT: String = "0.2.0" // Current snapshot.
     }
 
     object Java {

@@ -1,6 +1,13 @@
 # Aho-CorasiKt
 
-Kotlin Multiplatform implementation of the Aho-Corasick multiple pattern matching algorithm for string searching.
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-%237F52FF.svg?style=flat-square&logo=kotlin&logoColor=%237F52FF&labelColor=%23181717)](https://kotlinlang.org/)
+[![Documentation](https://img.shields.io/badge/Dokka-purple?style=flat-square&logo=bookstack&logoColor=7F52FF&label=Docs&labelColor=181717&color=7F52FF)](https://www.javadoc.io/doc/io.github.jadarma.ahocorasikt/aho-corasikt/latest/index.html)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.jadarma.ahocorasikt/aho-corasikt?strategy=highestVersion&style=flat-square&logo=apachemaven&logoColor=C71A36&label=Maven%20Central&labelColor=181717&color=C71A36)](https://central.sonatype.com/namespace/io.github.jadarma.ahocorasikt)
+[![GitHub License](https://img.shields.io/github/license/Jadarma/aho-corasikt?style=flat-square&logo=opensourceinitiative&logoColor=3DA639&label=License&labelColor=181717&color=3DA639)](https://github.com/Jadarma/aho-corasikt/blob/main/LICENSE.md)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Jadarma/aho-corasikt/build.yml?branch=main&style=flat-square&logo=githubactions&logoColor=2088FF&label=Build&labelColor=181717&color=2088FF)](https://github.com/Jadarma/aho-corasikt/actions/workflows/build.yml)
+
+Kotlin Multiplatform implementation of the [Aho-Corasick](https://cr.yp.to/bib/1975/aho.pdf) algorithm for multiple
+string pattern matching.
 
 ## ✨ Features
 

@@ -29,7 +29,7 @@ mavenPublishing {
 
     pom {
         name = "Aho-CorasiKt"
-        description = "The Aho-Corasick multiple-pattern string matching algorithm implemented for Kotlin Multiplatform"
+        description = "Kotlin Multiplatform implementation of the Aho-Corasick algorithm for multiple string pattern matching."
         url = "https://jadarma.github.com/Jadarma/aho-corasikt"
         inceptionYear = "2026"
 
