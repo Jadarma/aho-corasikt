@@ -1,9 +1,9 @@
 name: 'Publish'
 
 # Action Dependency Pins:
-# actions/checkout            - de0fac2e4500dabe0009e67214ff5f5447ce83dd - v6.0.2 - https://github.com/actions/checkout/releases
-# actions/setup-java          - be666c2fcd27ec809703dec50e508c2fdc7f6654 - v5.2.0 - https://github.com/actions/setup-java/releases
-# gradle/actions/setup-gradle - 50e97c2cd7a37755bbfafc9c5b7cafaece252f6e - v6.1.0 - https://github.com/gradle/actions/releases
+# actions/checkout            - 3d3c42e5aac5ba805825da76410c181273ba90b1 - v7.0.1 - https://github.com/actions/checkout/releases
+# actions/setup-java          - d1374f8ac74474200d16ef8ecee22c7ae7a51880 - v6.3.0 - https://github.com/actions/setup-java/releases
+# gradle/actions/setup-gradle - 8da46b539cd8fe6ab27ca75128919a18d757604c - v6.4.1 - https://github.com/gradle/actions/releases
 
 on:
   workflow_dispatch:
@@ -26,14 +26,14 @@ jobs:
       ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: 'Setup Java'
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880
         with:
-          java-version: '25'
+          java-version: '17'
           distribution: 'temurin'
       - name: 'Setup Gradle'
-        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c
         with:
           cache-provider: 'basic'
           cache-read-only: true
