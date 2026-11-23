@@ -1,3 +1,10 @@
+pluginManagement {
+    repositories {
+        // Applied from precompiled plugins.
+        removeAll { true }
+    }
+}
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention")
 }

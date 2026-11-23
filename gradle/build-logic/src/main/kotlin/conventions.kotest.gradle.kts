@@ -7,14 +7,14 @@ plugins {
 
 kotlin {
     sourceSets {
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(libs.kotest.engine)
                 implementation(libs.kotest.assertions)
                 implementation(libs.testResources)
             }
         }
-        val jvmTest by getting {
+        jvmTest {
             dependencies {
                 implementation(libs.kotest.junit)
             }

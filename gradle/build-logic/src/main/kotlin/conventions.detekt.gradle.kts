@@ -13,7 +13,7 @@ detekt {
 }
 
 tasks {
-    withType<Detekt> {
+    withType<Detekt>().configureEach {
         reports {
             html.required = true
             sarif.required = true
@@ -24,18 +24,18 @@ tasks {
         exclude { it.file.invariantSeparatorsPath.contains("build/generated/") }
     }
 
-    val detektMain: Detekt by named<Detekt>("detektCommonMainSourceSet") {
+    val detektMain: Detekt = getByName<Detekt>("detektCommonMainSourceSet") {
         baseline = rootDir.resolve("gradle/detekt/baseline/baseline-main.xml")
         config.setFrom(rootDir.resolve("gradle/detekt/detekt.yml"))
     }
-    val detektTest: Detekt by named<Detekt>("detektCommonTestSourceSet") {
+    val detektTest: Detekt = getByName<Detekt>("detektCommonTestSourceSet") {
         baseline = rootDir.resolve("gradle/detekt/baseline/baseline-test.xml")
         config.setFrom(
             rootDir.resolve("gradle/detekt/detekt.yml"),
             rootDir.resolve("gradle/detekt/detekt-test.yml"),
         )
     }
-    val detekt: Detekt by named<Detekt>("detekt") {
+    named<Detekt>("detekt") {
         exclude { true } // Force no source, this is an aggregate task now.
         dependsOn(detektMain, detektTest)
     }

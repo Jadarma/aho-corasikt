@@ -7,7 +7,7 @@ kotlin {
     val benchmarkTargets = setOf("jvm", "macosArm64", "linuxX64")
 
     sourceSets {
-        val commonBenchmark by creating {
+        val commonBenchmark = create("commonBenchmark") {
             dependencies {
                 implementation(libs.kotlinx.benchmark.runtime)
             }
@@ -15,11 +15,9 @@ kotlin {
 
         targets.matching { it.name in benchmarkTargets }.configureEach {
             compilations {
-                val main by getting
-                val test by getting
-                val benchmark by creating {
-                    associateWith(main)
-                    associateWith(test)
+                create("benchmark") {
+                    associateWith(getByName("main"))
+                    associateWith(getByName("test"))
                     defaultSourceSet.dependsOn(commonBenchmark)
                 }
             }

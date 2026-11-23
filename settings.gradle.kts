@@ -3,7 +3,6 @@ includeBuild("gradle/build-logic")
 
 pluginManagement {
     repositories {
-        removeAll { true }
         includeBuild("gradle/build-logic")
     }
 }
