@@ -5,6 +5,7 @@
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.jadarma.ahocorasikt/aho-corasikt?strategy=highestVersion&style=flat-square&logo=apachemaven&logoColor=C71A36&label=Maven%20Central&labelColor=181717&color=C71A36)](https://central.sonatype.com/namespace/io.github.jadarma.ahocorasikt)
 [![GitHub License](https://img.shields.io/github/license/Jadarma/aho-corasikt?style=flat-square&logo=opensourceinitiative&logoColor=3DA639&label=License&labelColor=181717&color=3DA639)](https://github.com/Jadarma/aho-corasikt/blob/main/LICENSE.md)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Jadarma/aho-corasikt/build.yml?branch=main&style=flat-square&logo=githubactions&logoColor=2088FF&label=Build&labelColor=181717&color=2088FF)](https://github.com/Jadarma/aho-corasikt/actions/workflows/build.yml)
+[![No AI Notice](https://img.shields.io/badge/Human--Made-pink?style=flat-square&label=%F0%9F%A7%A0%20100%25&labelColor=181717)](## "No AI was used in making of this software.")
 
 Kotlin Multiplatform implementation of the [Aho-Corasick](https://cr.yp.to/bib/1975/aho.pdf) algorithm for multiple
 string pattern matching.
