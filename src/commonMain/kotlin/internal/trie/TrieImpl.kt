@@ -86,7 +86,7 @@ internal open class TrieImpl(
         search(
             text = text,
             requireNoOverlaps = requireNoOverlaps,
-            onOffer = { _, _ -> Unit },
+            onOffer = { _, _ -> },
             onConfirm = { _, ranges -> yieldAll(ranges) },
         )
 }

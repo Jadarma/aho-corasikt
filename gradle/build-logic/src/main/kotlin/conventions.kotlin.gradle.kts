@@ -8,7 +8,11 @@ plugins {
 
 kotlin {
     // Targets
-    jvm()
+    jvm {
+        compilerOptions {
+            jvmTarget = CompileOptions.Kotlin.jvmTarget
+        }
+    }
 
     // Native
     linuxX64()
@@ -47,9 +51,7 @@ kotlin {
     }
 
     @OptIn(ExperimentalAbiValidation::class)
-    abiValidation {
-        enabled = true
-    }
+    abiValidation()
 
     applyDefaultHierarchyTemplate()
 

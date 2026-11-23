@@ -1,14 +1,14 @@
 [versions]
-kotlin = "2.3.21"        # https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin/versions
+kotlin = "2.4.21"        # https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin/versions
 
-benchmark = "0.4.16"     # https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.benchmark
-detekt = "2.0.0-alpha.2" # https://central.sonatype.com/artifact/dev.detekt/detekt-gradle-plugin/versions
-dokka = "2.2.0"          # https://central.sonatype.com/artifact/org.jetbrains.dokka/dokka-gradle-plugin/versions
-kotest = "6.1.11"        # https://central.sonatype.com/artifact/io.kotest/kotest-framework-engine-jvm/versions
-kover = "0.9.8"          # https://central.sonatype.com/artifact/org.jetbrains.kotlinx.kover/org.jetbrains.kotlinx.kover.gradle.plugin/versions
-ksp = "2.3.7"            # https://central.sonatype.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin/versions
-publishing = "0.36.0"    # https://central.sonatype.com/artifact/com.vanniktech.maven.publish/com.vanniktech.maven.publish.gradle.plugin/versions
-testResources = "0.15.0" # https://plugins.gradle.org/plugin/com.goncalossilva.resources
+benchmark = "0.6.0-rc"   # https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.benchmark
+detekt = "2.0.0-alpha.6" # https://central.sonatype.com/artifact/dev.detekt/detekt-gradle-plugin/versions
+dokka = "2.3.0"          # https://central.sonatype.com/artifact/org.jetbrains.dokka/dokka-gradle-plugin/versions
+kotest = "6.2.7"         # https://central.sonatype.com/artifact/io.kotest/kotest-framework-engine-jvm/versions
+kover = "0.9.11"         # https://central.sonatype.com/artifact/org.jetbrains.kotlinx.kover/org.jetbrains.kotlinx.kover.gradle.plugin/versions
+ksp = "2.3.10"           # https://central.sonatype.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin/versions
+publishing = "0.37.0"    # https://central.sonatype.com/artifact/com.vanniktech.maven.publish/com.vanniktech.maven.publish.gradle.plugin/versions
+testResources = "0.16.3" # https://plugins.gradle.org/plugin/com.goncalossilva.resources
 toolchains = "1.0.0"     # https://plugins.gradle.org/plugin/org.gradle.toolchains.foojay-resolver-convention
 
 [libraries]
